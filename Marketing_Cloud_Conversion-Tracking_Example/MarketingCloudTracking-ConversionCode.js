@@ -2,6 +2,17 @@
 // <!--example email click thru url: http://localhost:8888/harley/landing-page-conversion-example.html?j=2027714&sfmc_sub=151496521&l=1940_HTML&u=55981221&mid=6421787&jb=1-->
 // using jquery to grab DOM elements worth reporting on. For now we get totalValue.
 $(document).ready(function () {
+    //disallow tracking pixel on confirmation page when theres a page refresh.
+    var numberOfRrefreshes = sessionStorage.getItem('browserRefresh');
+
+    if (numberOfRrefreshes === null) {
+        numberOfRrefreshes = 0;
+    }
+
+    numberOfRrefreshes++;
+
+    sessionStorage.setItem("browserRefresh", numberOfRrefreshes);
+
     var totalValue = $("#totalValue").text();
 
     // Lets wrap quotes around the totalValue to properly format the dataset url.
