@@ -1,0 +1,14 @@
+%%[
+/*get url parameters*/
+/*example url: https://pub.s6.exacttarget.com/1cy4ajr5dii?contactId=12345&userid=4321*/
+
+var @getContactID
+var @getUserID
+
+set @getContactID=queryparameter('contactid')
+set @getUserID=queryparameter('userid')
+
+]%%
+
+<p>ContactID is: %%=v(@getContactID)=%%</p>
+<p>UserID is: %%=v(@getUserID)=%%</p>

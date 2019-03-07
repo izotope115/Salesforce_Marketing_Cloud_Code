@@ -1,0 +1,13 @@
+%%[
+
+/*create new salesforce lead*/
+var @lead
+set @lead=CreateSalesforceObject('lead', 5,
+                                'FirstName', 'Kevin',
+                                'LastName', 'Durant',
+                                'Email', 'kevin@somewhere.com',
+                                'Company', 'Golden State Warriors',
+                                'Status', 'Open - Not Contacted')
+]%%
+
+<p>New Lead is: %%=v(@lead)=%%</p>

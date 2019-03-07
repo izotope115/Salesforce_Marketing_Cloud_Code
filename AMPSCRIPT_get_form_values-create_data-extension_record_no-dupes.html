@@ -1,0 +1,96 @@
+<html lang="en">
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        %%[
+
+        if RequestParameter("submitted") == "submitted" then
+
+            var @email, @fullName, @accountNumber, @zipCode, @companyName, @checkZip, @numRows, @checkDE, @deNumRows, @createDeRecord, @textValidation, @success, @fail
+
+        set @fullName = RequestParameter('fullName')
+        set @accountNumber = RequestParameter('accountNumber')
+        set @email = RequestParameter('email')
+        set @zipCode = RequestParameter('zipCode')
+        set @companyName = RequestParameter('companyName')
+        set @companyURL = RequestParameter('companyURL')
+
+
+        set @checkZip = LookupRows('YOUR_TARGET_DATA_EXTENSION_NAME_CONTAINING_ZIP_CODES', 'ZipCode', @zipCode)
+        set @numRows = RowCount(LookupRows('YOUR_TARGET_DATA_EXTENSION_NAME_CONTAINING_ZIP_CODES','ZipCode',@zipCode))
+        set @checkDE = LookupRows('AMZCapture', 'EmailAddress', @email)
+        set @deNumRows = RowCount(LookupRows('YOUR_TARGET_DATA_EXTENSION_NAME','EmailAddress',@email))
+
+            if @numRows >0 AND @deNumRows == 0 then
+
+        set @createDeRecord = InsertDE(
+            'YOUR_TARGET_DATA_EXTENSION_NAME',
+            'FullName', @fullName,
+            'AccountNumber', @accountNumber,
+            'EmailAddress', @email,
+            'ZipCode', @zipCode,
+            'CompanyName', @companyName)
+
+        set @textValidation = 1
+        set @success = 'In-garage delivery is available for this zip code.'
+
+        elseif @numRows == 0 then
+        set @fail = 'In-garage delivery is not yet available in your zip code.'
+
+        elseif @deNumRows >0 then
+        set @duplicatedFound = 'You have already submitted your information.'
+
+            endif
+            endif
+            endif
+            endif
+
+        ]%%
+        
+        <h3>This code serves as an example for checking if something already exists within a Marketing Cloud Data Extension before form submission.</h3>
+
+        <p>You should have two Data Extensions set up in Marketing Cloud. One that captures all form data below, and the other that contains a list of Zip Codes to match against before submitting. If the Zip Code doesn’t match then a record will not be created. This code also checks for duplicate records in the Data Extension before submitting.</p>
+
+        <div class="form-group">
+
+            <form action="%%=RequestParameter('PAGEURL')=%%" method="post" autocomplete="on">
+                <label>*Full Name</label>
+                <input class="form-control" type="text" name="fullName" required>
+
+                <label>*Company Name</label>
+                <input class="form-control" type="text" name="companyName" required>
+
+                <label>Account Number</label>
+                <input class="form-control" type="text" name="accountNumber">
+
+                <label>*Email Address</label>
+                <input class="form-control" type="text" name="email" required>
+
+                <label>*Zip Code</label>
+                <input class="form-control" type="text" name="zipCode" required>
+
+                <input id="submitted" type="hidden" name="submitted" value="submitted" />
+                <br>
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+
+            <p style="color: darkcyan">%%=v(@success)=%%</p>
+            <p style="color: crimson">%%=v(@fail)=%%</p>
+            <p style="color: darkorange">%%=v(@duplicatedFound)=%%</p>
+
+        </div>
+    </div>
+</body>
+
+</html>

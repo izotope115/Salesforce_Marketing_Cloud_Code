@@ -1,0 +1,15 @@
+%%[
+
+/*get salesforce user*/
+var @getSalesforceUser
+Set @getSalesforceUser= RetrieveSalesforceObjects('User',
+                                                  'Id, FirstName, LastName',
+                                                  'Id', '=', '00550000005jeGDAAY')
+
+/*get row then field*/
+Set @UserRow = ROW(@getSalesforceUser,1)
+Set @UserName = FIELD(@UserRow ,"FirstName")
+
+]%%
+
+<p>User is: %%=v(@UserName)=%%</p>

@@ -1,0 +1,49 @@
+<html lang="en">
+  <head>
+  </head>
+
+  <body>
+
+%%[
+var @email, @firstName, @lastName, @createSfRecord, @createDeRecord
+
+set @firstName = RequestParameter('firstName')
+set @lastName = RequestParameter('lastName')
+set @email = RequestParameter('email')
+
+if RequestParameter("submitted") == "submitted" then
+
+   set @createSfRecord = CreateSalesforceObject(
+    'Account', 3,
+    'FirstName', @firstName,
+    'LastName', @lastName,
+    'Email', @email)
+
+   set @createDeRecord = InsertDE(
+    'MyDataExtensionName',
+    'First Name',@firstName,
+    'Last Name',@lastName,
+    'Email',@email)
+endif
+
+]%%
+
+<form action="%%=RequestParameter('PAGEURL')=%%" method="post">
+<label>First Name</label>
+<input type="text" name="firstName">
+
+<label>Last Name</label>
+<input type="text" name="lastName">
+
+<label>Email</label>
+<input type="text" name="email">
+
+<input id="submitted" type="hidden" name="submitted" value="submitted" />
+
+<input type="submit" value="Submit">
+</form>
+
+%%=IIF(RequestParameter("submitted") == "submitted", '<p>Your form has been submitted.</p>','')=%%
+
+</body>
+</html>

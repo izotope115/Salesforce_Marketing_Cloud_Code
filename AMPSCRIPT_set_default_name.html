@@ -1,0 +1,7 @@
+%%[ SET @FirstName = [FirstName]
+
+IF NOT EMPTY(@FirstName)
+THEN SET @Salutation = CONCAT(@FirstName, ",")
+ELSE SET @Salutation = "" ENDIF ]%%
+
+<div>%%=v(@Salutation)=%%</div>

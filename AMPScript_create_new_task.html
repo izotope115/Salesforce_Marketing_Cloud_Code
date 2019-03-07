@@ -1,0 +1,10 @@
+%%[
+
+/*create new salesforce task using 15 digit salesforce id*/
+var @task
+set @task=CreateSalesforceObject('task', 4,
+                                'OwnerId', '00550000005jeGD',
+                                'Subject', 'Call',
+                                'Priority', 'Normal',
+                                'Status', 'Not Started')
+]%%
