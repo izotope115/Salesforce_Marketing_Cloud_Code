@@ -1,5 +1,5 @@
-<h2>Salesforce Marketing Cloud AMPScript Recipes </h2><br>
-This repo has a variety of AMPScript recipes that I have used for client Salesforce/Marketing Cloud engagements.
+<h2>Salesforce Marketing Cloud AMPScript Recipes and Other Code </h2><br>
+This repo has a variety of AMPScript recipes nad other code that I have used for client Salesforce/Marketing Cloud engagements.
 
 <h3>Introduction to AMPscript</h3>
 
