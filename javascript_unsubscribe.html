@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Unsubscribe Example</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        // jshint ignore:
+        $(document).ready(function() {
+
+            var url = window.location.href; //get url
+            var searchParams = new URLSearchParams(url);
+            var unsubValue = document.getElementById('unsub').value;
+            var urlData = []; //empty array for url data
+
+            for (let p of searchParams) {
+                urlData.push(p) //push url data to urlData array
+            }
+
+            var subscriberDetails = urlData["0"][1]; //get subscriber encoded url
+            var unsubURL = "http://cloud.email###/unsubscribe-success?qs=" + subscriberDetails; //## enter proper cloud page url
+            var keepURL = "http://cloud.email###/unsubscribe-success?subscription=true"; //## enter proper cloud page url
+
+            $('#formInput input').on('change', function() {
+                var radioCheck = $('input[name=unsub]:checked', '#formInput').val();
+                localStorage.setItem("hdmcpreferences", radioCheck);
+                var status = localStorage.getItem("hdmcpreferences", radioCheck);
+
+                document.getElementById("submitButton").onclick = function() {
+                    if (subscriberDetails && status === 'unsub') {
+                        location.href = unsubURL
+                        return
+                    }
+                    if (subscriberDetails && status === 'keep') {
+                        location.href = keepURL
+                        return
+                    } else {
+                        alert('Please click the unsubscribe link in the email you received.')
+                    }
+                }
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+<h3>Marketing Cloud Unsubscribe Example with Separate Confirmation Page and using JavaScript</h3>
+    <p><b>First:</b> Be sure to enter the proper Cloud Page URLs in the above JavaScript code (lines 28 and 29). Line 28 will be the success/confirmation page. Ensure you have proper unsubscribe AMPScript code on your confirmation page (see AMPScript_unsub_all_subscribers.html in this repo). </p>
+    <p><b>Second:</b> Copy and paste this code into your Cloud Page where users will be "landing" themselves upon clicking the unsubscribe link in your email.</p>
+        <p><b>Third:</b> You should send yourself a test email with correct unsubscribe link, linking the user to your Cloud Page URL. This is so that you can pass Marketing Cloud's encoded query parameters to the subsequent URL.</p>
+        <div class="form-group">
+
+            <div id="formInput">
+                <br>
+                <input id="keep" type="radio" name="unsub" value="keep">
+                <label for="keep">Keep getting emails</label><br />
+                <input id="unsub" type="radio" name="unsub" value="unsub">
+                <label for="">Unsubscribe from promotional emails</label>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+        </div>
+
+        <div class="legal">&copy; 2019 Donec euismod, dolor a efficitur laoreet, elit tellus porttitor urna, vel mattis dui tortor quis risus. <br /><br />
+
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et justo in nibh laoreet consectetur quis et odio. Suspendisse potenti. Mauris interdum, lorem id consectetur ullamcorper, est magna ultricies eros, sed elementum dui libero et dolor. Sed ac felis vitae nibh efficitur pharetra. Ut tincidunt non lectus id lacinia. Nullam at pharetra odio. Integer ut nisi nunc. Morbi cursus urna in libero posuere cursus. Proin tempus ornare eros, id porttitor tortor tristique aliquet. Nulla arcu leo, accumsan in est eu, dictum scelerisque neque. Morbi ullamcorper, neque vel mattis imperdiet, dui nunc dapibus libero, quis consectetur justo lorem quis ante. Curabitur lacinia tortor nibh, eget convallis magna mollis sit amet. Donec euismod, dolor a efficitur laoreet, elit tellus porttitor urna, vel mattis dui tortor quis risus.</div>
+    </div>
+
+    </div>
+
+    <div>
+        <div>
+            <div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
