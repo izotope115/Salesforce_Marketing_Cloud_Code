@@ -9,6 +9,25 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script>
+        window.onload = function() {
+
+            var success = document.getElementById("success").innerHTML;
+            var fail = document.getElementById("fail").innerHTML;
+            var duplicatedFound = document.getElementById("duplicatedFound").innerHTML;
+
+            console.log(success, fail, duplicatedFound);
+
+            if (success === "Add your success message here" || fail === "Add your fail message here" || duplicatedFound === "Add your duplicate message here") {
+
+                window.setTimeout(function() {
+
+                    window.location.href = "https://"; // enter redirect url!
+
+                }, 8000);
+            }
+        };
+    </script>
 </head>
 
 <body>
@@ -85,9 +104,9 @@
                 <input class="btn btn-primary" type="submit" value="Submit">
             </form>
 
-            <p style="color: darkcyan">%%=v(@success)=%%</p>
-            <p style="color: crimson">%%=v(@fail)=%%</p>
-            <p style="color: darkorange">%%=v(@duplicatedFound)=%%</p>
+    <p id="success" style="color: darkcyan">%%=v(@success)=%%</p>
+    <p id="fail" style="color: crimson">%%=v(@fail)=%%</p>
+    <p id="duplicatedFound" style="color: darkorange">%%=v(@duplicatedFound)=%%</p>
 
         </div>
     </div>
