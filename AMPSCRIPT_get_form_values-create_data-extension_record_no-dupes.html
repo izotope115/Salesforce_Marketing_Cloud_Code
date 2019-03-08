@@ -18,7 +18,7 @@
 
             console.log(success, fail, duplicatedFound);
 
-            if (success === "Add your success message here" || fail === "Add your fail message here" || duplicatedFound === "Add your duplicate message here") {
+            if (success === "Add your success message here." || fail === "Add your fail message here." || duplicatedFound === "Add your duplicate message here") {
 
                 window.setTimeout(function() {
 
@@ -62,13 +62,13 @@
             'CompanyName', @companyName)
 
         set @textValidation = 1
-        set @success = 'In-garage delivery is available for this zip code.'
+        set @success = 'Add your success message here.'
 
         elseif @numRows == 0 then
-        set @fail = 'In-garage delivery is not yet available in your zip code.'
+        set @fail = 'Add your fail message here.'
 
         elseif @deNumRows >0 then
-        set @duplicatedFound = 'You have already submitted your information.'
+        set @duplicatedFound = 'Add your duplicate message here.'
 
             endif
             endif
@@ -80,6 +80,8 @@
         <h3>This code serves as an example for checking if something already exists within a Marketing Cloud Data Extension before form submission.</h3>
 
         <p>You should have two Data Extensions set up in Marketing Cloud. One that captures all form data below, and the other that contains a list of Zip Codes to match against before submitting. If the Zip Code doesn’t match then a record will not be created. This code also checks for duplicate records in the Data Extension before submitting.</p>
+        
+        <p>Upon submitting the form the page will refresh after 8 seconds. Line 13 is the JavaScript code that runs the refresh based on submitting the form and if feedback messaaging for success, fail or duplicatedFound exists.</p>
 
         <div class="form-group">
 
