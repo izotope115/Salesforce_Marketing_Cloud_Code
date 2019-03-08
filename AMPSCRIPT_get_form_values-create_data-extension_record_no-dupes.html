@@ -36,7 +36,7 @@
 
         if RequestParameter("submitted") == "submitted" then
 
-            var @email, @fullName, @accountNumber, @zipCode, @companyName, @checkZip, @numRows, @checkDE, @deNumRows, @createDeRecord, @textValidation, @success, @fail
+            var @email, @fullName, @accountNumber, @zipCode, @companyName, @checkZip, @numRows, @checkDE, @deNumRows, @createDeRecord, @success, @fail
 
         set @fullName = RequestParameter('fullName')
         set @accountNumber = RequestParameter('accountNumber')
@@ -61,7 +61,6 @@
             'ZipCode', @zipCode,
             'CompanyName', @companyName)
 
-        set @textValidation = 1
         set @success = 'Add your success message here.'
 
         elseif @numRows == 0 then
