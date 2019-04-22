@@ -1,0 +1,31 @@
+<!--use autocomplete="noop" for each spam form inputs so that chrome browsers obey-->
+<input type="text" name="contact_me_by_fax_only" value="1" style="opacity:0 !important" tabindex="-1" autocomplete="noop">
+
+<!--working example of input box for spam bots-->
+<div style="opacity:0 !important" class="smartcapture-controls">
+    <div class="sc-formfield-label"><label for="Phone">Phone</label></div>
+    <div class="sc-formfield-input"><input autocomplete="noop" type="text" name="Phone" data-field-type="Text" value="" tabindex="-1" id="phone"></div>
+</div>
+
+
+<script>
+    //simulate spam bot
+    var getValue = document.getElementById('phone').value = "Im a spam bot";
+    console.log(getValue);
+
+</script>
+
+<!--hide using javascript-->
+<script>
+    window.onload = function() {
+        document.getElementById("phone").hidden = true;
+        document.getElementById("data-point").hidden = true;
+    };
+
+</script>
+
+<!--only the min amount of html needed-->
+<form autocomplete="off" id="form-phone">
+    <label for="Phone" id="data-point">Phone</label>
+    <input autocomplete="noop" type="text" name="Phone" data-field-type="Text" value="" tabindex="-1" id="phone">
+</form>
