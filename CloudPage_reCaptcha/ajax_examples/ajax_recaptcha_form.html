@@ -1,0 +1,61 @@
+%%[
+var @formAction,
+    @siteKey
+
+
+set @formAction = 'your_json_code_resource'
+set @siteKey = 'your_recaptcha_site_key'
+]%%
+<!doctype html>
+<html>
+<head>
+<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+$(function () {
+  var params = {};
+
+  $('button[class=submit]').on('click', function (e) {
+    e.preventDefault();
+
+    params['g-recaptcha-response'] = grecaptcha.getResponse();
+
+    $.ajax({
+      url: '%%=v(@formAction)=%%',
+      method: 'POST',
+      data: params,
+      dataType: 'json'
+    })
+    .done(function (data, textStatus, jqXHR) {
+      $('.status').html(data.statusMsg);
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {})
+    .always(function () {
+      $('button[class=submit]').attr('disabled', true);
+      grecaptcha.reset();
+    });
+  });
+});
+
+
+var enableForm = function () {
+  $('button[class=submit]').attr('disabled', false);
+  $('.status').html('');
+};
+
+
+var disableForm = function () {
+  $('button[class=submit]').attr('disabled', true);
+  $('.status').html('');
+};
+</script>
+</head>
+<body>
+<form action="%%=v(@formAction)=%%" method="POST">
+  <div class="g-recaptcha" data-callback="enableForm" data-expired-callback="disableForm" data-sitekey="%%=v(@siteKey)=%%"></div>
+  <br>
+  <button class="submit" disabled>Submit</button> <span class="status"></span>
+</form>
+</body>
+</html>

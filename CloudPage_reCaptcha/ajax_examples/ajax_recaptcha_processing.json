@@ -1,0 +1,53 @@
+%%[
+/* This code resource landing page must be of content type JSON */
+var @url,
+    @contentType,
+    @secret,
+    @response,
+    @payload,
+    @success,
+    @errors,
+    @status,
+    @statusMsg
+
+
+set @url = 'https://www.google.com/recaptcha/api/siteverify'
+set @contentType = 'application/x-www-form-urlencoded'
+
+/* reCAPTCHA Secret Key */
+set @secret = 'your_recaptcha_secret_key'
+
+set @response = RequestParameter('g-recaptcha-response')
+set @payload = Concat('secret=', @secret, '&response=', @response)
+set @success = false
+set @errors = ''
+
+HTTPPost(@url, @contentType, @payload, @status)
+]%%
+<script runat=server>
+Platform.Load('Core', '1');
+
+var responseJSON = Platform.Variable.GetValue('@status');
+var responseObj = Platform.Function.ParseJSON(responseJSON);
+
+Platform.Variable.SetValue('@success', responseObj.success);
+
+if (responseObj.hasOwnProperty('error-codes')) {
+  Platform.Variable.SetValue('@errors', responseObj['error-codes'].toString());
+}
+</script>
+%%[
+if (@success == true) then
+
+  /* AMPscript to perform insert/upsert goes here */
+
+  set @statusMsg = Concat('Success')
+
+else
+  set @statusMsg = Concat('Error', iif(not Empty(@errors), Concat(': ', @errors), ''))
+
+endif
+]%%
+{
+  "statusMsg": "%%=v(@statusMsg)=%%"
+}

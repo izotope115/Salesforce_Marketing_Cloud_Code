@@ -1,0 +1,47 @@
+%%[
+/* initialize variables */
+
+var @formAction,
+@emailaddress,
+@firstname,
+@lastname,
+@finalFormAction,
+@siteKey
+
+/* set form values */
+
+set @emailaddress = RequestParameter('emailaddress')
+set @firstName = RequestParameter('firstname')
+set @lastname = RequestParameter('lastname')
+
+/* create url */
+
+set @formAction = 'https://pub.s6.exacttarget.com/hrpiobmvmql'
+set @siteKey = 'reCaptch_Site_Key'
+]%%
+
+<!doctype html>
+<html>
+
+<head>
+    <title></title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body>
+    <form action="%%=v(@formAction)=%%" method="POST">
+        <div class="g-recaptcha" data-sitekey="%%=v(@siteKey)=%%"></div>
+        <br>
+        Email Address<br>
+        <input type="text" name="emailaddress"><br>
+        First Name:<br>
+        <input type="text" name="firstname"><br>
+        Last Name:<br>
+        <input type="text" name="lastname"><br>
+        <br>
+
+        <button>Submit</button></span>
+    </form>
+</body>
+
+</html>

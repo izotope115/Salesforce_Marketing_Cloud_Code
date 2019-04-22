@@ -1,0 +1,78 @@
+%%[
+/* initialize variables */
+
+var @url,
+@contentType,
+@secret,
+@response,
+@payload,
+@success,
+@errors,
+@status,
+@statusMsg,
+@firstname,
+@lastname,
+@emailaddress
+
+/* verify site */
+
+set @url = 'https://www.google.com/recaptcha/api/siteverify'
+set @contentType = 'application/x-www-form-urlencoded'
+
+/* reCAPTCHA Secret Key */
+set @secret = 'reCaptcha_Secret_Key'
+
+set @response = RequestParameter('g-recaptcha-response')
+set @payload = Concat('secret=', @secret, '&response=', @response)
+set @success = false
+set @errors = ''
+
+HTTPPost(@url, @contentType, @payload, @status)
+]%%
+<script runat=server>
+    Platform.Load('Core', '1');
+
+    var responseJSON = Platform.Variable.GetValue('@status');
+    var responseObj = Platform.Function.ParseJSON(responseJSON);
+    Platform.Variable.SetValue('@success', responseObj.success);
+
+    if (responseObj.hasOwnProperty('error-codes')) {
+        Platform.Variable.SetValue('@errors', responseObj['error-codes'].toString());
+    }
+
+</script>
+<!doctype html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    %%[
+    if (@success == true) then
+
+    set @firstname = QUERYPARAMETER('firstname')
+    set @lastname = QUERYPARAMETER('lastname')
+    set @emailaddress = QUERYPARAMETER('emailaddress')
+
+    InsertData('Member_Sign_Up','EmailAddress', @emailaddress,'FirstName', @firstname,'LastName', @lastname)
+
+    set @statusMsg = Concat('Success')
+    ]%%
+
+    %%=v(@statusMsg)=%%
+
+    %%[
+    else
+    set @statusMsg = Concat('Error', iif(not Empty(@errors), Concat(': ', @errors), ''))
+    ]%%
+
+    %%=v(@statusMsg)=%%
+
+    %%[
+    endif
+    ]%%
+</body>
+
+</html>
