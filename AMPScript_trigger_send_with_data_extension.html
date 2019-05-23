@@ -13,12 +13,11 @@ IF IsEmailAddress(@email) == true THEN
 /* Submit Data to Data Extension but since we are using a triggered send we need to work with the triggered send api instead. Commented out for now. */
 /* INSERTDATA("Nuedexta_HCP_APSForm_Trigger","FirstName",@firstName,"LastName",@lastName,"EmailAddress",@email,"Care",@careType,"SubmitDate", @submitTime,"SubscriberKey", @subscriberkey) */
  
-
 /* Trigger Send Object Creation */
     SET @ts = CreateObject("TriggeredSend")
     SET @tsDef = CreateObject("TriggeredSendDefinition")
     SET @ts_subkey = @email
-    SET @triggerkey = "YOUR_TRIGGERD_SEND_EXTERNAL_KEY"
+    SET @triggerkey = "34036"
 
     /* Set the External Key of the Trigger Send Definition */
     SetObjectProperty(@tsDef, "CustomerKey", @triggerkey)
@@ -34,7 +33,7 @@ IF IsEmailAddress(@email) == true THEN
     /* Create and Set Attributes */
     SET @attr = CreateObject("Attribute")
     SetObjectProperty(@attr, "Name", "ChannelMemberID")
-    SetObjectProperty(@attr, "Value", "ENTER_YOUR_MID")
+    SetObjectProperty(@attr, "Value", "100018724")
     AddObjectArrayItem(@ts_sub, "Attributes", @attr)
 
     SET @attr = CreateObject("Attribute")
@@ -54,12 +53,7 @@ IF IsEmailAddress(@email) == true THEN
 
     SET @attr = CreateObject("Attribute")
     SetObjectProperty(@attr, "Name", "Care")
-    SetObjectProperty(@attr, "Value", @Care)
-    AddObjectArrayItem(@ts_sub, "Attributes", @attr)
-
-    SET @attr = CreateObject("Attribute")
-    SetObjectProperty(@attr, "Name", "Care")
-    SetObjectProperty(@attr, "Value", @Care)
+    SetObjectProperty(@attr, "Value", @careType)
     AddObjectArrayItem(@ts_sub, "Attributes", @attr)
 
     /* Add all Attributes into Array */
