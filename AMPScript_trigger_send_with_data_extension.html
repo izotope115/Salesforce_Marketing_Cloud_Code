@@ -1,0 +1,179 @@
+%%[
+
+/* Get Submit Attributes */
+SET @submitTime = Now()
+SET @firstName = RequestParameter("FirstName")
+SET @lastName = RequestParameter("LastName")
+SET @careType = RequestParameter("Care")
+SET @email = Replace(Replace(RequestParameter("EmailAddress"),"%2","+"),"%40","@")
+SET @subscriberkey = @email
+
+/* Was form submitted? */
+IF IsEmailAddress(@email) == true THEN
+/* Submit Data to Data Extension but since we are using a triggered send we need to work with the triggered send api instead. Commented out for now. */
+/* INSERTDATA("Nuedexta_HCP_APSForm_Trigger","FirstName",@firstName,"LastName",@lastName,"EmailAddress",@email,"Care",@careType,"SubmitDate", @submitTime,"SubscriberKey", @subscriberkey) */
+ 
+
+/* Trigger Send Object Creation */
+    SET @ts = CreateObject("TriggeredSend")
+    SET @tsDef = CreateObject("TriggeredSendDefinition")
+    SET @ts_subkey = @email
+    SET @triggerkey = "YOUR_TRIGGERD_SEND_EXTERNAL_KEY"
+
+    /* Set the External Key of the Trigger Send Definition */
+    SetObjectProperty(@tsDef, "CustomerKey", @triggerkey)
+    SetObjectProperty(@ts, "TriggeredSendDefinition", @tsDef)
+
+    /* Create the Subscriber Object */
+    SET @ts_sub = CreateObject("Subscriber")
+    SetObjectProperty(@ts_sub, "EmailAddress", @email)
+
+    /* Set SubscriberKey to EmailAddress */
+    SetObjectProperty(@ts_sub, "SubscriberKey", @ts_subkey)
+
+    /* Create and Set Attributes */
+    SET @attr = CreateObject("Attribute")
+    SetObjectProperty(@attr, "Name", "ChannelMemberID")
+    SetObjectProperty(@attr, "Value", "ENTER_YOUR_MID")
+    AddObjectArrayItem(@ts_sub, "Attributes", @attr)
+
+    SET @attr = CreateObject("Attribute")
+    SetObjectProperty(@attr, "Name", "EmailAddress")
+    SetObjectProperty(@attr, "Value", @EmailAddress)
+    AddObjectArrayItem(@ts_sub, "Attributes", @attr)
+
+    SET @attr = CreateObject("Attribute")
+    SetObjectProperty(@attr, "Name", "FirstName")
+    SetObjectProperty(@attr, "Value", @FirstName)
+    AddObjectArrayItem(@ts_sub, "Attributes", @attr)
+
+    SET @attr = CreateObject("Attribute")
+    SetObjectProperty(@attr, "Name", "LastName")
+    SetObjectProperty(@attr, "Value", @LastName)
+    AddObjectArrayItem(@ts_sub, "Attributes", @attr)
+
+    SET @attr = CreateObject("Attribute")
+    SetObjectProperty(@attr, "Name", "Care")
+    SetObjectProperty(@attr, "Value", @Care)
+    AddObjectArrayItem(@ts_sub, "Attributes", @attr)
+
+    SET @attr = CreateObject("Attribute")
+    SetObjectProperty(@attr, "Name", "Care")
+    SetObjectProperty(@attr, "Value", @Care)
+    AddObjectArrayItem(@ts_sub, "Attributes", @attr)
+
+    /* Add all Attributes into Array */
+    AddObjectArrayItem(@ts, "Subscribers", @ts_sub)
+
+    /*Complete the Web API call to trigger send */
+    SET @ts_statusCode = InvokeCreate(@ts, @ts_statusMsg, @errorCode)
+
+    /* Raise Error if Trigger fails */
+    IF @ts_statusCode != "OK" THEN
+    RaiseError(@ts_statusMsg, 0, @ts_statusCode, @errorCode)
+    ENDIF
+/* Display Thank You Page */
+]%%
+<html>
+
+<body style="background: #d4d4d4">
+    <!-- Remove Body/HTML tags for content area -->
+   <div style="margin-left: 40px; margin-right:40px; color:#000000; font-family:arial,helvetica,sans-serif;background-color: #ffffff">
+
+
+
+      <div style="margin-left: 40px; margin-right:40px; color:#000000; font-family:arial,helvetica,sans-serif;background-color: #ffffff">
+    <table cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%; " class="stylingblock-content-wrapper">
+        <tr>
+            <td class="stylingblock-content-wrapper camarker-inner">
+                <table width="100%" cellspacing="0" cellpadding="0">
+                    <tr><!--add a header image here-->
+                        <td align="center"><img data-assetid="19413" src="https://place-hold.it/400x200" height="auto" width="40%" style="display: block; padding: 50px; text-align: center; height: auto; width: 40%;"></td>
+                    </tr>
+                     
+                </table>
+           <p>Thank you. Your submission has been accepted and an email will be sent to %%=v(@email)=%%. <br><br>
+
+                    Please click <a href="%%=RedirectTo(CloudPagesURL(1684))=%%">here</a> to return to the form.</p> <br></td>
+          </table></div>
+    </div>
+    <!-- Remove Body/HTML tags for content area -->
+   </body>
+
+</html>
+    %%[
+    ELSE
+    /* Display Form */
+    ]%%
+
+    <html>
+
+    <body style="background: #d4d4d4">
+        <!-- Remove Body/HTML tags for content area -->
+        <div style="margin-left: 40px; margin-right:40px; color:#000000; font-family:arial,helvetica,sans-serif;background-color: #ffffff">
+            <table cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%; " class="stylingblock-content-wrapper">
+                <tr>
+                    <td class="stylingblock-content-wrapper camarker-inner">
+                        <table width="100%" cellspacing="0" cellpadding="0">
+                            <tr><!--add a header image here-->
+                                <td align="center"><img data-assetid="19413" src="https://place-hold.it/400x200" height="auto" width="40%" style="display: block; padding: 50px; text-align: center; height: auto; width: 40%;"></td>
+                            </tr>
+                        </table>
+                    </td>
+            </table>
+
+
+            <div style="padding-left:10%">
+                <p>Please fill out the fields below.</p><br><br>
+                <form id="aps_form">
+                    <div>
+                        <!-- FirstName -->
+                        <label for="FirstName">First Name *</label><br>
+                        <input style="width:250px" id="FirstName" name="FirstName" required="required" data-validation-message="Please fill out this field."><br><br>
+                    </div>
+                    <div>
+                        <!-- LastName -->
+                        <label for="LastName">Last Name</label><br>
+                        <input style="width:250px" id="LastName" name="LastName"><br><br>
+                    </div>
+                    <div>
+                        <!-- Email -->
+                        <label for="EmailAddress">Email *</label><br>
+                        <input style="width:250px" id="EmailAddress" name="EmailAddress" data-validation="email" required="required" data-validation-message="Please enter an email address."><br><br>
+                    </div>
+                    <div>
+                        <!-- Channel (Long Term Care or Specialty Care) -->
+                        <label for="Channel">Channel *</label><br>
+                        <input style="margin-bottom:10px;" type="radio" name="Care" value="Long Term Care" required="required" data-validation-message="Please fill out this field.">Long Term Care<br>
+                        <input type="radio" name="Care" value="Specialty Care" required="required" data-validation-message="Please fill out this field.">Specialty Care
+                    </div>
+                    <!-- Submit Date -->
+                    <input name="SubmitDate" type="hidden" value="%%=Now()=%%"><br><br>
+                    <div>
+                        <!-- Submit -->
+                        <button style="background-color: #009DDC;border-color: #009DDC;border-radius: 3px;border-style: solid;-webkit-border-radius: 3px;-moz-border-radius: 3px;color: #FFFFFF;font-family: Arial, Helvetica, sans-serif;font-size: 16px;line-height: normal;padding: 10px;left: 50%;position: absolute;margin-left: 3px;" type="submit">Submit</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+            <table cellpadding="20" cellspacing="0" width="100%" class="stylingblock-content-wrapper" style="min-width: 100%; ">
+                <tr>
+
+
+                    <td class="stylingblock-content-wrapper camarker-inner">
+
+                        <!-- Email: %%=v(@Email)=%% --><br><br>
+                        <p style="padding-left=20px;font-family:arial,helvetica,sans-serif;font-size: 14px ">Disclaimer text</p>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <!-- Remove Body/HTML tags for content area -->
+    </body></html>
+%%[
+/* Closing EndIF */
+ENDIF
+]%%
