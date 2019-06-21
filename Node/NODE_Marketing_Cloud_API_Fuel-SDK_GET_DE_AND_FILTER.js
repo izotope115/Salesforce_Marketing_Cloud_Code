@@ -6,7 +6,7 @@
 //Create a Data Extension with the following fields: EmailAddress | FirstName and populate with data. 
 //CLONE: https://github.com/salesforce-marketingcloud/FuelSDK-Node
 //NPM Install
-//Node NODE_Marketing_Cloud_API_Fuel-SDK.js
+//Node NODE_Marketing_Cloud_API_Fuel-SDK_GET_DE_AND_FILTER.js
 
 const ET_Client = require('./lib/ET_Client');
 
