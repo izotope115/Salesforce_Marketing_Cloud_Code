@@ -1,6 +1,6 @@
-//Fuel SDK for Interacting with Marketing Cloud API. A simple example retrieving a data extension and filtering criteria. 
+//Fuel SDK for Interacting with Marketing Cloud API. A simple example retrieving a Data Extension and filtering criteria. 
 
-//In Marketing Cloud create a server-server integration package to generate your Client ID and Client Secret. 
+//In Marketing Cloud create a server-server integration package to generate your Client ID and Client Secret. Be sure to set your READ/WRITE Preferences and enable integration in the Access Menu for each business unit.
 
 //HOW TO RUN
 //Create a Data Extension with the following fields: EmailAddress | FirstName and populate with data. 
