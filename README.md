@@ -1,5 +1,5 @@
-<h2>Salesforce Marketing Cloud AMPScript and JavaScript Recipes</h2><br>
-This repo has a variety of AMPScript and JavaScript recipes that I have used for client Salesforce Marketing Cloud engagements.
+<h2>Salesforce Marketing Cloud AMPScript, JavaScript, FUEL SDK-NODE, SQL Recipes and Examples</h2><br>
+This repo has a variety of recipes/examples that I have used for client Salesforce Marketing Cloud engagements.
 
 <h3>Introduction to AMPscript</h3>
 
