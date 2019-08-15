@@ -3,7 +3,8 @@
 var @Id, @subscriberRows, @subscriberRow, @MobilePhone, @SMSOptIn__c
 set @Id = _subscriberKey
 
-if RequestParameter("SMSOptIn__c") != true then
+
+if RequestParameter("submitted") AND RequestParameter("SMSOptIn__c") != true then
   var @updateRecord
   set @MobilePhone = RequestParameter("MobilePhone")
   set @SMSOptIn__c = false
@@ -14,7 +15,7 @@ if RequestParameter("SMSOptIn__c") != true then
       "SMSOptIn__c", @SMSOptIn__c
 )
 
-else
+elseif RequestParameter("submitted") then
   var @updateRecord
   set @MobilePhone = RequestParameter("MobilePhone")
   set @SMSOptIn__c = RequestParameter("SMSOptIn__c")
@@ -25,17 +26,14 @@ else
       "SMSOptIn__c", @SMSOptIn__c 
 )
 
+else
+
+<p>Error</p>
+
 endif
 
 ]%%
-<!DOCTYPE html>
-<html>
 
-<head>
-
-</head>
-
-<body>
     %%[ if RequestParameter("submitted") == true then ]%%
     <p>Record Updated</p>
     %%[ elseif RequestParameter("submitted") != true then then ]%%
@@ -45,16 +43,17 @@ endif
     <form action="%%=RequestParameter('PAGEURL')=%%" method="post">
         
         <label>Mobile Phone</label>
-        <input type="text" name="MobilePhone" value="%%=v(@MobilePhone)=%%" required>
+        <input type="tel" name="MobilePhone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" value="%%=v(@MobilePhone)=%%" required>
+        <small>Format: 123-456-7890</small>
+        <p>Opt-In Preferences</p>
+        <label>YES</label>
+        <input id="" type="radio" name="SMSOptIn__c" value="true">
         
-        <label>SMS Opt-In</label>
-        <input id="" type="checkbox" name="SMSOptIn__c" value="true">
-        
+         <label>NO</label>
+        <input id="" type="radio" name="SMSOptIn__c" value="false" checked>
+        <br>  <br>
         <span style="display:none;">%%=v(@SMSOptIn__c)=%%</span>
         
         <input name="submitted" type="hidden" value="true" />
         <input type="submit" value="Submit">
     </form>
-</body>
-
-</html>
