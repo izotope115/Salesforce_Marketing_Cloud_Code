@@ -1,0 +1,35 @@
+<html>
+<head>
+    <script type="text/javascript" src="//100018724.collect.igodigital.com/collect.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            //console.log('All assets are loaded') //load page before js execution 
+            var subKey = new URLSearchParams(window.location.search);
+
+            //_etmc.debug = true; // web collect object debug setting
+
+            _etmc.push(["setOrgId", "SET_ORG_ID"]);
+
+            _etmc.push(["trackPageView"]);
+
+            //console.log(subKey) //URLSearchParams output
+
+            _etmc.push(["setOrgId", "SET_ORG_ID"]);
+
+            _etmc.push(["setUserInfo", {
+                "email": subKey.get("subkey")
+
+            }]);
+
+            console.log("subscriber key: ", subKey.get("subkey")) //output get subscriber key value as a url parameter: ?subkey=123
+
+            _etmc.push(["trackPageView"]);
+
+        })
+        //console.log(_etmc) //output web collect object
+    </script>
+</head>
+
+<body>
+    body
+</body></html>
