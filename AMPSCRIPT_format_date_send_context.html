@@ -1,0 +1,6 @@
+%%[
+		SET @ExpirationDate = AttributeValue("Expiration Date") /* get attribute value in a send context */
+		SET @FormattedDate = FormatDate(@ExpirationDate, "s") /* format date using short format 01/01/2019*/
+		
+]%%
+		%%=v(@FormattedDate)=%% /* display in html*/
