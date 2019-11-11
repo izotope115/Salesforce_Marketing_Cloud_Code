@@ -3,13 +3,17 @@
 
 <head>
     <title>Get URL Parameters and Save to Hidden Form Field</title>
-
+    <style>
+        .hide {
+            display: none
+        }
+    </style>
     <script>
         window.addEventListener('load', function() {
             //Append this test UTM/GA parameters to your current browsers URL: ?utm_source=CampaignSourceValue&utm_medium=CampaignMediumValue&utm_campaign=CampaignNameValue&utm_term=CampaignTermValue&utm_content=CampaignContentValue
 
             //Example: https://www.google.com/?utm_source=CampaignSourceValue&utm_medium=CampaignMediumValue&utm_campaign=CampaignNameValue&utm_term=CampaignTermValue&utm_content=CampaignContentValue            
-            
+
             var paramsString = window.location.search;
             var searchParams = new URLSearchParams(paramsString);
 
@@ -21,12 +25,29 @@
 
             console.log(utm_source, utm_medium, utm_campaign, utm_term, utm_content)
 
+            document.getElementById("utm_source").value = utm_source
+            document.getElementById("utm_medium").value = utm_medium
+            document.getElementById("utm_campaign").value = utm_campaign
+            document.getElementById("utm_term").value = utm_term
+            document.getElementById("utm_content").value = utm_content
+
         });
     </script>
 </head>
 
 <body>
-
+    <form class="hide">
+        <label>utm_source</label>
+        <input type="hidden" id="utm_source">
+        <label>utm_medium</label>
+        <input type="hidden" id="utm_medium">
+        <label>utm_campaign</label>
+        <input type="hidden" id="utm_campaign">
+        <label>utm_term</label>
+        <input type="hidden" id="utm_term">
+        <label>utm_content</label>
+        <input type="hidden" id="utm_content">
+    </form>
 </body>
 
 </html>
