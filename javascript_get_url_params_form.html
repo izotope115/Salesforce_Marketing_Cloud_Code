@@ -13,10 +13,12 @@
             //Append this test UTM/GA parameters to your current browsers URL: ?utm_source=CampaignSourceValue&utm_medium=CampaignMediumValue&utm_campaign=CampaignNameValue&utm_term=CampaignTermValue&utm_content=CampaignContentValue
 
             //Example: https://www.google.com/?utm_source=CampaignSourceValue&utm_medium=CampaignMediumValue&utm_campaign=CampaignNameValue&utm_term=CampaignTermValue&utm_content=CampaignContentValue            
-
+            
+            //Get URL and create new instance of URLSearchParams
             var paramsString = window.location.search;
             var searchParams = new URLSearchParams(paramsString);
 
+            //Store UTM parameters
             var utm_source = searchParams.get('utm_source')
             var utm_medium = searchParams.get('utm_medium')
             var utm_campaign = searchParams.get('utm_campaign')
@@ -25,7 +27,7 @@
 
             console.log(utm_source, utm_medium, utm_campaign, utm_term, utm_content)
             
-            //Saving Values to hidden input fields
+            //Saving values to hidden input fields
             document.getElementById("utm_source").value = utm_source
             document.getElementById("utm_medium").value = utm_medium
             document.getElementById("utm_campaign").value = utm_campaign
