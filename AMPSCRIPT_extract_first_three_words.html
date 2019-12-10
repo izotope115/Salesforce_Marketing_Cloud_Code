@@ -1,0 +1,19 @@
+%%[
+VAR @Text ,@Split1, @Split2, @Split3
+
+SET @Text = "aaa,bbb,cccc ddd,eee"
+
+SET @Rows = BuildRowSetFromString(@Text, ",")
+
+SET @Split1 = Field(Row(@Rows, 1), 1)
+
+SET @Split2 = Field(Row(@Rows, 2), 1)
+
+SET @Split3 = Field(Row(@Rows, 3), 1)
+]%%
+
+%%=v(@Split1)=%%</br>
+
+%%=v(@Split2)=%%</br>
+
+%%=v(@Split3 )=%%</br>
