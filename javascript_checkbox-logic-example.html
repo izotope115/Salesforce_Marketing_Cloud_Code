@@ -1,0 +1,35 @@
+<tr>
+    <td><input type="checkbox" name="progress" id="progress1" value="1" tabIndex="1" onClick="checkboxLogic(this)">Test 1</td>
+</tr>
+<tr>
+    <td><input type="checkbox" name="progress" id="progress2" value="1" tabIndex="1" onClick="checkboxLogic(this)">Test 2</td>
+</tr>
+<tr>
+    <td><input type="checkbox" name="progress" id="progress3" value="1" tabIndex="1" onClick="checkboxLogic(this)">Test 3</td>
+</tr>
+<tr>
+    <td><input type="checkbox" name="progress" id="progress4" value="1" tabIndex="1" onClick="checkboxLogic(this)">Test 4</td>
+</tr>
+
+<script>
+    function checkboxLogic(ckType) {
+        var ckName = document.getElementsByName(ckType.name);
+        var checked = document.getElementById(ckType.id);
+
+        if (checked.checked) {
+            for (var i = 0; i < ckName.length; i++) {
+
+                if (!ckName[i].checked) {
+                    ckName[i].disabled = true;
+                } else {
+                    ckName[i].disabled = false;
+                }
+            }
+        } else {
+            for (var i = 0; i < ckName.length; i++) {
+                ckName[i].disabled = false;
+            }
+        }
+    }
+</script>
+Run code snippetReturn to post
