@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title></title>
 </head>
+
 <body>
- <script>
-    function ckChange(el) {
-        var ckName = document.getElementsByTagName('input');
+    <script>
+        function ckChange(el) {
+            var ckName = document.getElementsByTagName("input");
 
-        for (var i = 0, c; c = ckName[i]; i++) {
-							//	console.log(ckName[i]);
-            if (ckName[i].type == "checkbox" && ckName[i].className === el.className) {
-            ckName[i].disabled = true;
-                
-                //c.disabled = !(!el.checked || c === el);
-                
+            for (var i = 0, c;
+                (c = ckName[i]); i++) {
+//                console.log(el.className)
+                if (ckName[i].type == "checkbox" && ckName[i].className === el.className) {
+                    c.disabled = !(!el.checked || c === el);
+                }
             }
-             
         }
-    }
-</script>
-<tr>
-    <td><input class="9AM" data="9AM" type="checkbox" name="" id="progress1" value="1" tabIndex="1" onClick="ckChange(this)">9AM</td>
-</tr>
-<tr>
-    <td><input class="9AM" data="9AM" type="checkbox" name="" id="progress2" value="1" tabIndex="1" onClick="ckChange(this)">9AM</td>
-</tr>
-<tr>
-    <td><input class="10AM" data="10AM" type="checkbox" name="" id="progress3" value="1" tabIndex="1" onClick="ckChange(this)">10AM</td>
-</tr>
-
-<tr>
-    <td><input class="10AM" data="10AM" type="checkbox" name="" id="progress3" value="1" tabIndex="1" onClick="ckChange(this)">10AM</td>
-</tr>
-<tr>
-    <td><input class="11AM" data="11AM" type="checkbox" name="" id="progress4" value="1" tabIndex="1" onClick="ckChange(this)">11AM</td>
-</tr>
-    
+    </script>
     <tr>
-    <td><input class="3PM" data="3PM" type="checkbox" name="" id="progress4" value="1" tabIndex="1" onClick="ckChange(this)">3PM</td>
-</tr>
-<tr>
-    <td><input class="11AM" data="11AM" type="text" name="" id="progress4" tabIndex="1" onClick="ckChange(this)">Input</td>
-</tr>
+        <td><input class="9AM" data="9AM" type="checkbox" name="" id="progress1" value="1" tabIndex="1" onClick="ckChange(this)">9AM</td>
+    </tr>
+    <tr>
+        <td><input class="9AM" data="9AM" type="checkbox" name="" id="progress2" value="1" tabIndex="1" onClick="ckChange(this)">9AM</td>
+    </tr>
+    <tr>
+        <td><input class="10AM" data="10AM" type="checkbox" name="" id="progress3" value="1" tabIndex="1" onClick="ckChange(this)">10AM</td>
+    </tr>
+
+    <tr>
+        <td><input class="10AM" data="10AM" type="checkbox" name="" id="progress3" value="1" tabIndex="1" onClick="ckChange(this)">10AM</td>
+    </tr>
+    <tr>
+        <td><input class="11AM" data="11AM" type="checkbox" name="" id="progress4" value="1" tabIndex="1" onClick="ckChange(this)">11AM</td>
+    </tr>
+
+    <tr>
+        <td><input class="3PM" data="3PM" type="checkbox" name="" id="progress4" value="1" tabIndex="1" onClick="ckChange(this)">3PM</td>
+    </tr>
+    <tr>
+        <td><input class="11AM" data="11AM" type="text" name="" id="progress4" tabIndex="1" onClick="ckChange(this)">Input</td>
+    </tr>
 </body>
+
 </html>
