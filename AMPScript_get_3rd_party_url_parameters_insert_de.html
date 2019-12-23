@@ -1,0 +1,66 @@
+%%[
+
+if RequestParameter("submitted") == true then
+
+InsertData(
+"HubSpot",
+"SFDCContactID", RequestParameter("SFDCContactID"),
+"EmailAddress", RequestParameter("email")
+)
+
+endif
+
+]%%
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script>
+        window.addEventListener('load', function() {
+            //Append this test UTM/GA parameters to your current browsers URL: ?SFDCContactID=1234567899&Email=me@me.com
+
+            //Get URL and create new instance of URLSearchParams
+            var paramsString = window.location.search;
+            var searchParams = new URLSearchParams(paramsString);
+
+            //Store UTM parameters
+            var SFDCContactID = searchParams.get('SFDCContactID');
+            var Email = searchParams.get('Email');
+
+
+            //output values for testing
+            console.log(SFDCContactID, Email, searchParams)
+
+            //Saving values to hidden input fields if not null
+            if (SFDCContactID || Email !== null) {
+                document.getElementById("SFDCContactID").value = SFDCContactID
+                document.getElementById("Email").value = Email
+
+            }
+        });
+    </script>
+
+</head>
+
+<body>
+    %%[ if RequestParameter("submitted") == true then ]%%
+    <p>Thank you for submitting your details.</p>
+    %%[ else ]%%
+    
+    <h2>HubSpot</h2>
+    <form action="%%=RequestParameter('PAGEURL')=%%" method="post">
+        
+        <label>SFDCContactID</label>
+        <input id="SFDCContactID" type="text" name="SFDCContactID">
+
+        <label>EmailAddress</label>
+        <input id="Email" type="text" name="email">
+       
+        <input name="submitted" type="hidden" value="true" />
+        <input type="submit" value="Submit">
+    </form>
+    %%[ endif ]%%
+</body>
+
+</html>
