@@ -93,4 +93,4 @@ axios({
     }).catch(function (error) {
     console.log(error.toJSON());
 });
-}, 86400000); //runs in 24 hours
+}, 86400000); //runs every 24 hours
