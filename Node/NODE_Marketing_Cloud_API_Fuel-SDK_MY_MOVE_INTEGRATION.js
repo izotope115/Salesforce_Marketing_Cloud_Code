@@ -12,7 +12,7 @@ const axios = require('axios').default;
 const ET_Client = require('./lib/ET_Client');
 const clientId = 'MARKETING_CLOUD_CLIENT_ID';
 const clientSecret = 'MARKETING_CLOUD_CLIENT_SECRET';
-const stack = 's4';
+const stack = 'MARKETING_CLOUD_STACK';
 
 const origin = 'https://YOUR_REST_KEY.rest.marketingcloudapis.com/';
 const authOrigin = 'https://YOUR_AUTH_KEY.auth.marketingcloudapis.com/';
