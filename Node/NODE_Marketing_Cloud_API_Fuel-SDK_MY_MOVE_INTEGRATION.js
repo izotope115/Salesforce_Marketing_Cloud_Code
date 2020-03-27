@@ -24,7 +24,7 @@ const client = new ET_Client(clientId, clientSecret, stack, {
     soapOrigin,
     authOptions: {
         authVersion: 2,
-        accountId: 'MARKETING_CLOUD_ACCOUNT_ID'
+        accountId: 'MARKETING_CLOUD_ACCOUNT_MID'
     }
 });
 
