@@ -1,0 +1,317 @@
+<script type="text/javascript" runat="server">
+
+    Platform.Load("core", "1");
+
+    var debug = true;
+    var request = {};
+
+    SetVar("method", Request.Method)
+    SetVar("urlThis", Platform.Request.RequestURL);
+    SetVar("MasterDEKey", "PreferenceCenter");
+    SetVar("debug", debug);
+
+    if (request.method == "GET") {
+
+        if (debug) {
+            Write("GET<br>");
+        }
+
+        // retrieve the subscriberkey via system personalization string from the send context
+        SetVar("SubscriberKey", Attribute.GetValue("_SubscriberKey"));
+
+        if (request.SubscriberKey != "") {
+
+            // retrieve the row from the Master DE
+            var masterRows = Platform.Function.LookupRows(request.MasterDEKey, ['SubscriberKey'], [request.SubscriberKey]);
+
+            if (debug) {
+                Write("<br>masterRows.length: " + masterRows.length);
+                Write("<br>masterRows: " + Stringify(masterRows));
+            }
+
+            // set variables for the Master column values (for defaulting below)
+            if (typeof masterRows !== 'undefined' && masterRows.length > 0) {
+
+                // DE field names are case-sensitive
+                SetVar("SubscriberKey", masterRows[0]["SubscriberKey"]);
+                SetVar("EmailAddress", masterRows[0]["EmailAddress"]);
+                SetVar("FirstName", masterRows[0]["FirstName"]);
+                SetVar("LastName", masterRows[0]["LastName"]);
+                SetVar("ZipCode", masterRows[0]["ZipCode"]);
+                SetVar("Status", masterRows[0]["Status"]);
+
+            }
+
+        }
+
+    } else if (request.method == "POST") {
+
+        if (debug) {
+            Write("POST<br>");
+        }
+
+        // get form field values
+        SetVar("SubscriberKey", Request.GetFormField("SubscriberKey"));
+
+        // if the SubscriberKey is blank then fall back and use the email address
+        if (request.SubscriberKey == "") {
+            SetVar("SubscriberKey", Request.GetFormField("EmailAddress"));
+        }
+
+        // retrieve values from the form submission
+        // form field names are case-sensitive
+        SetVar("EmailAddress", Request.GetFormField("EmailAddress"));
+        SetVar("FirstName", Request.GetFormField("FirstName"));
+        SetVar("LastName", Request.GetFormField("LastName"));
+        SetVar("ZipCode", Request.GetFormField("ZipCode"));
+        SetVar("Status", Request.GetFormField("Status"));
+
+        if (request.SubscriberKey != "" && request.Status == "True") {
+
+            try {
+
+                // set values for Subscriber update
+                var sub = {
+                    "SubscriberKey": request.SubscriberKey,
+                    "EmailAddress": request.EmailAddress,
+                    "Status": "Active"
+                };
+
+                // initialize the Subscriber object
+                var subObj = Subscriber.Init(request.SubscriberKey);
+
+                // add/update the Subscriber
+                SetVar("subscriberUpsertResults", subObj.Upsert(sub));
+
+                // upsert a row in the Master Data Extension
+                var de = DataExtension.Init(request.MasterDEKey);
+
+                var row = {};
+                row.EmailAddress = request.EmailAddress;
+                row.SubscriberKey = request.SubscriberKey;
+                row.FirstName = request.FirstName;
+                row.LastName = request.LastName;
+                row.ZipCode = request.ZipCode;
+                row.Status = request.Status;
+
+                if (debug) {
+                    Write("<br><br>DE row: " + Stringify(row));
+                }
+
+                try {
+
+                    // attempt to add a row
+                    //SetVar("rowAddResults", de.Rows.Add(row));
+                    // update existing row
+                    SetVar("rowUpdateResults", de.Rows.Update(row, ['SubscriberKey'], [request.SubscriberKey]));
+
+                } catch (e1) {
+
+                    if (debug) {
+                        Write("<br><br>Exception (1): " + e1);
+                    }
+
+                    try {
+
+                        SetVar("rowUpdateResults", de.Rows.Update(row, ['SubscriberKey'], [request.SubscriberKey]));
+
+                    } catch (e2) {
+
+                        if (debug) {
+                            Write("<br><br>Exception (2): " + e2 + " " + Stringify(request));
+                        }
+
+                    }
+                }
+
+                SetVar("overallResult", "success");
+
+            } catch (e3) {
+
+                SetVar("overallResult", "error");
+
+            }
+
+        }
+
+        if (request.SubscriberKey != "" && request.Status == "False" || request.Status == "null") {
+
+            try {
+
+                // set values for Subscriber update
+                var sub = {
+                    "SubscriberKey": request.SubscriberKey,
+                    "EmailAddress": request.EmailAddress,
+                    "Status": "Unsubscribed"
+                };
+
+                // initialize the Subscriber object
+                var subObj = Subscriber.Init(request.SubscriberKey);
+
+                // add/update the Subscriber
+                SetVar("subscriberUpsertResults", subObj.Upsert(sub));
+
+                // upsert a row in the Master Data Extension
+                var de = DataExtension.Init(request.MasterDEKey);
+
+                var row = {};
+                row.EmailAddress = request.EmailAddress;
+                row.SubscriberKey = request.SubscriberKey;
+                row.FirstName = request.FirstName;
+                row.LastName = request.LastName;
+                row.ZipCode = request.ZipCode;
+                row.Status = request.Status;
+
+                if (debug) {
+                    Write("<br><br>DE row: " + Stringify(row));
+                }
+
+                try {
+
+                    // attempt to add a row
+                    //SetVar("rowAddResults", de.Rows.Add(row));
+                    // update existing row
+                    SetVar("rowUpdateResults", de.Rows.Update(row, ['SubscriberKey'], [request.SubscriberKey]));
+
+                } catch (e1) {
+
+                    if (debug) {
+                        Write("<br><br>Exception (1): " + e1);
+                    }
+
+                    try {
+
+                        SetVar("rowUpdateResults", de.Rows.Update(row, ['SubscriberKey'], [request.SubscriberKey]));
+
+                    } catch (e2) {
+
+                        if (debug) {
+                            Write("<br><br>Exception (2): " + e2 + " " + Stringify(request));
+                        }
+
+                    }
+                }
+
+                SetVar("overallResult", "success");
+
+            } catch (e3) {
+
+                SetVar("overallResult", "error");
+
+            }
+
+        } // EmailAddress check
+
+    } // POST
+
+    // sets JS and AMPScript variables
+    function SetVar(varName, varValue) {
+        request[varName] = varValue;
+        Variable.SetValue(varName, varValue);
+    }
+
+    if (debug) {
+        Write("<br><br>" + Stringify(request) + "<br><br>");
+    }
+</script>
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 13px;
+        }
+
+        label {
+            display: block;
+            padding-top: 10px;
+        }
+
+        input[type="text"] {
+            display: block;
+
+        }
+
+        fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        window.addEventListener('load', function() {
+            document.getElementById('status').onclick = function() {
+                // access properties using this keyword
+                if (this.checked) {
+                    document.getElementById('status').value = 'True'
+                    //alert(this.value);
+                } else {
+                    // if not checked ...
+                    document.getElementById('status').value = 'False'
+                    //alert(this.value);
+                }
+            };
+        });
+    </script>
+    
+    %%[ if @method == "GET" then ]%%
+
+    <form id="form1" action="%%=v(@urlThis)=%%" method="post" enctype="application/x-www-form-urlencoded">
+        <fieldset>
+            <input type="hidden" name="SubscriberKey" value="%%=v(@SubscriberKey)=%%">
+
+            <label for="Email Address">Email Address</label>
+            <input type="text" name="EmailAddress" value="%%=v(@EmailAddress)=%%" required>
+
+            <label for="First Name">First Name</label>
+            <input type="text" name="FirstName" value="%%=v(@FirstName)=%%" required>
+
+            <label for="Last Name">Last Name</label>
+            <input type="text" name="LastName" value="%%=v(@LastName)=%%" required>
+
+            <label for="ZipCode">Zip Code</label>
+            <input type="text" name="ZipCode" value="%%=v(@ZipCode)=%%" required>
+
+            %%[if @Status == "True" then]%%
+            <label for="Status">Subscription Status: Subscribed</label>
+            <input id="status" type="checkbox" name="status" value="True" checked>
+
+            %%[ endif ]%%
+
+            %%[if @Status == "False" then]%%
+            <label for="Status">Subscription Status: Unsubscribed</label>
+            <input id="status" type="checkbox" name="status" value="False">
+            %%[ endif ]%%
+
+        </fieldset>
+
+        <p><button type="submit">Submit</button></p>
+
+        <p>Subscription Status: %%=v(@Status)=%%</p>
+    </form>
+
+    %%[ elseif @method == "POST" then ]%%
+
+    %%[ if @overallResult == "success" then ]%%
+
+    <h1>Thanks</h1>
+    We got your updates.
+
+    %%[ elseif @overallResult == "error" then ]%%
+
+    <h1>Oops!</h1>
+    We had some trouble.
+
+    %%[ endif ]%%
+
+
+    %%[ endif ]%%
+
+</body>
+
+</html>
