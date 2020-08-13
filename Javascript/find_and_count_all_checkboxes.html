@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>Example Title</title>
+    <meta name="author" content="Your Name">
+    <meta name="description" content="Example description">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="">
+    <link rel="icon" type="image/x-icon" href="" />
+</head>
+
+<body>
+    <script>
+        window.onload = function() {
+            var array = []
+            var checkboxes = document.getElementsByTagName('input');
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                array.push(checkboxes[i].value)
+            }
+            console.log(checkboxes)
+        };
+
+    </script>
+    <header></header>
+    <main> <input id="1" type="checkbox">
+        <input id="2" type="checkbox">
+        <input id="3" type="checkbox">
+    </main>
+    <footer></footer>
+    <script type="text/javascript" src=""></script>
+</body>
+
+</html>
