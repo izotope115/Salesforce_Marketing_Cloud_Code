@@ -1,0 +1,27 @@
+%%[Var @xml, @titles, @title, @descs, @desc, @links, @link, @cnt
+Set @xml = HTTPGet("RSSFEED_HERE")
+Set @titles = BuildRowsetFromXML(@xml,"//item/title",1)
+Set @descs = BuildRowsetFromXML(@xml,"//item/description",1)
+Set @links = BuildRowsetFromXML(@xml,"//item/link",1)
+
+If RowCount(@titles) > 5 THEN
+SET @rows = 5
+ELSE
+SET @rows = RowCount(@titles)
+ENDIF
+
+IF @rows >= 1 THEN
+for @cnt = 1 to @rows do
+Set @title = Field(Row(@titles,@cnt),"Value")
+Set @desc = Field(Row(@descs,@cnt), "Value")
+Set @link = Field(Row(@links,@cnt), "Value") ]%%
+
+<div style="border: 1px solid #444; background-color: #F7F7F7; margin: 0.76em 0; padding: 0.76em;">
+<h1 style="font: bold normal 1.0em Arial, Helvetica, sans-serif;">
+    <a href="%%=RedirectTo(@link)=%%" alias="%%=v(@title)=%%" title="%%=v(@title)=%%" style="color: #000;">%%=v(@title)=%%</a></h1>
+<span style="font: normal normal 0.76em Arial, Helvetica, sans-serif; color: #444;">%%=v(@desc)=%%</span>
+</div>
+%%[ 
+NEXT @cnt 
+ENDIF
+]%%
