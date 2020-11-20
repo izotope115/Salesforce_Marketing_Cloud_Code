@@ -180,10 +180,15 @@ try {
 </html>
 
 %%[ELSE]%%
+
+  <p>Login Successful</p>
+
 %%[ENDIF]%%
 
 %%[IF @CookieStatus == "true" THEN]%%
-<p>Cookie already set</p>
+
+  <p>Cookie already set/login Successful</p>
+
 %%[ELSE]%%
 %%[ENDIF]%%
 
