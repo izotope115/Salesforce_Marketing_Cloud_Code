@@ -1,4 +1,4 @@
-<!--Create data extension with two fields: Login and Password. Name it Dashboard_Logins-->
+<!--Create data extension with two fields: Login and Password. Name it Logins-->
 
 <script runat="server">
     Platform.Load("core", "1.1");
@@ -17,7 +17,7 @@ try {
     //var formPassword = "123"; //testing
     //var formLogin = "userName"; //testing
 
-    var dataRows = Platform.Function.LookupRows('Dashboard_Logins','Password',formPassword);
+    var dataRows = Platform.Function.LookupRows('Logins','Password',formPassword);
     
      if(dataRows && dataRows.length > 0) {
           for(var i=0; i < dataRows.length; i++) {
