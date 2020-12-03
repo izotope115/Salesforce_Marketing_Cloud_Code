@@ -1,0 +1,25 @@
+  %%[
+set @xml2 = HTTPGet("https://www.tradestation.com/insights/feed/")
+set @xml2 = Replace(@xml2, 'content:encoded', 'image')
+
+set @rowSet = BuildRowSetFromXML(@xml2, "//item/image", 1)
+set @img = Field(Row(@rowSet,1),"Value")
+
+/*MAKE NEW NODE*/
+set @imgNode = Concat('<root>', @img, '</root>')
+set @rowSet = BuildRowSetFromXML(@imgNode, "//img", 1)
+
+set @rowCount = RowCount(@rowSet)
+
+if (@rowCount > 0) then
+	set @attrSuffix = '_att'
+    set @row = Row(@rowset, 1)
+    set @custAttr = Field(@row, 'Value')
+    set @imgURL = Field(@row, Concat('src',@attrsuffix))
+ENDIF
+
+set @HTML_XML = replace(replace(@imgNode, ">", "&gt;"), "<", "&lt;")
+
+OutPut(Concat("Output: ", @imgURL))
+
+]%%
