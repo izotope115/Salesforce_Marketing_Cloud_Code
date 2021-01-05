@@ -1,50 +1,27 @@
-<script type="javascript" runat="server">
+<script runat=server>
+    Platform.Load("Core", "1");
 
-Platform.Load("core","1.1.5");
+    var url = 'https://{AUTH BASE URI}.auth.marketingcloudapis.com/v2/token';
+    var contentType = 'application/json';
+    var payload = '{"grant_type": "client_credentials","client_id": "{CLIENT ID}","client_secret": "{CLIENT SECRET}","account_id":"{MID}"}';
 
-var DE = "Contacts_To_Delete";
-var logDE = "Contacts_To_Delete_Log";
-var log = DataExtension.Init(logDE);
+    var accessTokenResult = HTTP.Post(url, contentType, payload);
+    var accessToken = Platform.Function.ParseJSON(accessTokenResult["Response"][0]).access_token;
 
-var url = 'https://auth.exacttargetapis.com/v1/requestToken';
-var contentType = 'application/json';
-var payload = "";
-payload += '{"clientId":"CLIENT_ID_GOES_HERE",';
-payload += '"clientSecret":"CLIENT_SECRET_GOES_HERE"}';
+if(accessToken !='')
 
-var accessTokenResult = HTTP.Post(url, contentType, payload);
-var statusCode = result["StatusCode"];
-var response = accessTokenResult["Response"][0];
-var accessToken = Platform.Function.ParseJSON(response).accessToken;
-
-url = "https://www.exacttargetapis.com/contacts";
-url += "/v1/contacts/actions/delete?type=listReference";
-var headerNames = ["Authorization"];
-var headerValues = ["Bearer " + accessToken];
-payload = "";
-payload += '{';
-payload += ' "deleteOperationType": "ContactAndAttributes",';
-payload += ' "targetList": {';
-payload += '   "listType": {';
-payload += '     "listTypeID": 3';
-payload += '   },';
-payload += '   "listKey": "' + DE  + '"';
-payload += ' },';
-payload += ' "deleteListWhenCompleted": false,';
-payload += ' "deleteListContentsWhenCompleted": true';
-payload += '}';
-
+{
 try {
+var deleteUrl = 'https://{REST BASE URI}.rest.marketingcloudapis.com/contacts/v1/contacts/actions/delete?type=listReference';
+var payload1 = '{"deleteOperationType": "ContactAndAttributes","targetList": {"listType": {"listTypeID": 3},"listKey": "{DE KEY}"},"deleteListWhenCompleted": false,"deleteListContentsWhenCompleted": false}';
 
-  result = HTTP.Post(url, contentType, payload, headerNames, headerValues);
-  result = Stringify(result).replace(/[\n\r]/g, '');
-  log.Rows.Add({"Message": "result: " + result});
-
-} catch (e) {
-
-  e = Stringify(e).replace(/[\n\r]/g, '')
-  log.Rows.Add({"Message": "error: " + e});
-
+var headerNames = ["Authorization"];
+var s1="Bearer ";
+var headerValues = [s1.concat(accessToken)];
+var result = HTTP.Post(deleteUrl, contentType, payload1, headerNames, headerValues);
 }
-
+catch (ex) {
+        Write("Exception Error: " + Stringify(ex));
+}
+}
 </script>
