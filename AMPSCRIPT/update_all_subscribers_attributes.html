@@ -1,0 +1,20 @@
+%%[
+
+var @sub, @updateStatusCode, @updateStatusMessage, @updateErrorCode
+set @sub = CreateObject("Subscriber")
+SetObjectProperty(@sub, "EmailAddress", "doug@limedash.com")
+SetObjectProperty(@sub, "SubscriberKey", "doug@limedash.com")
+SetObjectProperty(@sub, "Status", "Active")
+
+set @updateOptions = CreateObject("UpdateOptions")
+set @saveOptions = CreateObject("SaveOption")
+SetObjectProperty(@saveOptions,"SaveAction","UpdateAdd")
+SetObjectProperty(@saveOptions,"PropertyName","*")
+AddObjectArrayItem(@updateOptions,"SaveOptions", @saveOptions)
+
+set @updateStatusCode = InvokeUpdate(@sub, @updateStatusMessage, @updateErrorCode, @updateOptions)
+
+]%%
+updateStatusCode: %%=v(@updateStatusCode)=%%
+<br>updateStatusMessage: %%=v(@updateStatusMessage)=%%
+<br>updateErrorCode: %%=v(@updateErrorCode)=%%
