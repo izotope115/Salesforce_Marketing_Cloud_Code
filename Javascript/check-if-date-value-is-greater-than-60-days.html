@@ -1,0 +1,30 @@
+<html>
+    <head></head>
+    <body>
+        <input type="date" value="" id="dateInput" class="someClass"> </input>
+        <button class="someClass" onclick="checkDate()">Submit</button>
+    
+        <script>
+           
+            function checkDate() {
+                
+            var future = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)//get todays date and add 60 days
+            var inputDate = document.getElementById('dateInput').value; //get date value from form input box
+            var convertInputToDate = new Date(inputDate) //need to create a new date object so we can work with dates and not strings
+
+            var diffTime = Math.abs(convertInputToDate - future); //difference in time
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));  //difference in date
+         
+            console.log(diffDays + " days"); //output value to console
+                //here we have a conditional that checks if the difference in days is greater than 60
+            if (diffDays > 60) {
+                alert ("please enter a date less than 60 days")
+                }
+                else {
+                }
+            }
+            </script>       
+    </body>
+    </html>
+
+
