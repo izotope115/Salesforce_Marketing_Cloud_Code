@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+      <input id=email type="email">Enter Email Address</input>
+      <button onclick="validateEmailField()">Submit</button>
+        
+<script>
+
+var rejectList = ["google.com", "yahoo.com"];
+
+function validateEmailField() {
+    var emailValue = document.getElementById('email').value // To Get Value (can use getElementById)
+    var splitArray = emailValue.split('@'); // To Get Array
+
+    if (rejectList.indexOf(splitArray[1]) >= 0) {
+        // Means it has the rejected domains
+        //return false;
+        alert("please choose a qualified email address")
+    }
+    return true;
+
+}
+</script>
+
+
+
+        
+    </body>
+</html>
