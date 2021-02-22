@@ -21,7 +21,7 @@ function validateEmailField() {
     var splitArray = emailValue.split('@'); // To Get Array
 
     if (rejectList.indexOf(splitArray[1]) >= 0) {
-        // Means it has the rejected domains
+        // disalow domains
         //return false;
         alert("please choose a qualified email address")
     }
