@@ -1,0 +1,41 @@
+%%[
+
+set @email = "gabe@google.com"
+
+if indexOf(@email, "@") > 0 then
+  set @Substring = Substring(@email,Add(indexOf(@email, "@"),1))
+endif
+
+if (@Substring == "google.com" OR @Substring == "yahoo.com") then
+
+Output("Please use a qualified email address")
+else
+endif
+
+
+]%%
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <form method="POST" action="#">
+  <input type="email" id="email" name="email"><br><br>
+    </form>
+      <button>Submit</button>
+        <br><br>
+%%=v(@Substring)=%%
+%%=v(@email)=%%
+
+
+
+        
+    </body>
+</html>
