@@ -1,7 +1,8 @@
-var rejectList = ["google.com", "yahoo.com"];
+
+var rejectList = ["google.com", "yahoo.com"]; //add list of domains to reject
 
 function validateEmailField() {
-    var emailValue = $('#email-input').val(); // To Get Value (can use getElementById)
+    var emailValue = document.getElementById('Email').value 
     var splitArray = emailValue.split('@'); // To Get Array
 
     if (rejectList.indexOf(splitArray[1]) >= 0) {

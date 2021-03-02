@@ -10,20 +10,22 @@
     </head>
     <body>
       <input id=email type="email">Enter Email Address</input>
-      <button onclick="validateEmailField()">Submit</button>
+      <button>Submit</button>
         
 <script>
+    var b = document.querySelector("button");
+    b.setAttribute("onclick", "validateEmailField()"); //onclick to html element
 
-var rejectList = ["google.com", "yahoo.com"]; //add email domains here
+    var rejectList = ["google.com", "yahoo.com"]; //add email domains here
 
 function validateEmailField() {
-    var emailValue = document.getElementById('email').value //get value 
-    var splitArray = emailValue.split('@'); //get array
+    var emailValue = document.getElementById('Email').value // get value
+    var splitArray = emailValue.split('@'); // get array
 
     if (rejectList.indexOf(splitArray[1]) >= 0) {
         // disalow domains
         //return false;
-        alert("please choose a qualified email address")
+        alert("please choose a qualified email address") //message
     }
     return true;
 
