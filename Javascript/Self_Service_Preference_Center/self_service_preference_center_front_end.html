@@ -8,24 +8,6 @@
 Set @subKey = "gabe.khofri@slalom.com"
 
 ]%%
-<script runat=server>
-    Platform.Load("Core", "1");
-    var subKey = Variable.GetValue("@subKey");
-    var PC_Selections = DataExtension.Init("PC_Selections");
-
-    try {
-        var filter = { Property: "subKey", SimpleOperator: "equals", Value: subKey };
-        var PC_SelectionsData = PC_Selections.Rows.Retrieve(filter);
-
-        if (PC_SelectionsData.length == 0) {
-            PC_Selections.Rows.Add({ subKey: subKey });
-
-        }
-
-    } catch (err) {
-        Write("<br>error: " + Stringify(error));
-    }
-</script>
 
 
 <head>
@@ -98,6 +80,21 @@ Set @subKey = "gabe.khofri@slalom.com"
                     <script runat="server">
                         Platform.Load("core", "1.1");
                         var DE = "PC_Categories"
+                        var subKey = Variable.GetValue("@subKey");
+                        var PC_Selections = DataExtension.Init("PC_Selections");
+
+                        try {
+                            var filter = { Property: "subKey", SimpleOperator: "equals", Value: subKey };
+                            var PC_SelectionsData = PC_Selections.Rows.Retrieve(filter);
+
+                            if (PC_SelectionsData.length == 0) {
+                                PC_Selections.Rows.Add({ subKey: subKey });
+
+                            }
+
+                        } catch (err) {
+                            Write("<br>error: " + Stringify(error));
+                        }
                         try {
 
                             var PC_Categories = DataExtension.Init(DE);
