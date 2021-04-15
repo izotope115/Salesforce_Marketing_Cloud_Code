@@ -4,6 +4,29 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
 <html>
+%%[
+Set @subKey = "gabe.khofri@slalom.com"
+
+]%%
+<script runat=server>
+    Platform.Load("Core", "1");
+    var subKey = Variable.GetValue("@subKey");
+    var PC_Selections = DataExtension.Init("PC_Selections");
+
+    try {
+        var filter = { Property: "subKey", SimpleOperator: "equals", Value: subKey };
+        var PC_SelectionsData = PC_Selections.Rows.Retrieve(filter);
+
+        if (PC_SelectionsData.length == 0) {
+            PC_Selections.Rows.Add({ subKey: subKey });
+
+        }
+
+    } catch (err) {
+        Write("<br>error: " + Stringify(error));
+    }
+</script>
+
 
 <head>
     <meta charset="utf-8">
@@ -61,15 +84,17 @@
         <div class="jumbotron">
             <div class="container">
                 <h1 class="display-3">Self Service Preference Center</h1>
-                <p>Example of a Marketing Cloud Custom Self Service Preference Center pulling preference categories and descriptions from a data extension. This enables users to administer new or existing categories and descriptions without making any changes to HTML or CSS code.</p>
+                <p>Example of a Marketing Cloud Custom Self Service Preference Center pulling preference categories and
+                    descriptions from a data extension. This enables users to administer new or existing categories and
+                    descriptions without making any changes to HTML or CSS code.</p>
                 <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
             </div>
         </div>
 
         <div class="container">
-            <!-- Example row of columns -->
+
             <div class="row">
-                <form>
+                <form action="%%=RequestParameter('PAGEURL')=%%" method="post">
                     <script runat="server">
                         Platform.Load("core", "1.1");
                         var DE = "PC_Categories"
@@ -81,7 +106,7 @@
                             if (Rows.length > 0) {
                                 for (var i in Rows) {
                                     Write('<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="' + Rows[i]["id"] + '">');
-                                    Write('<label class="custom-control-label" for="' + Rows[i]["for"] + '">' + Rows[i]["category"] + '</label></div>');
+                                    Write('<label class="custom-control-label" for="' + Rows[i]["id"] + '">' + Rows[i]["category"] + '</label></div>');
                                     Write('<div><p>' + Rows[i]["description"] + '</p></div>');
                                 }
                             }
@@ -92,8 +117,11 @@
                             Variable.SetValue("rowMessage", "(-) No data was retrieved." + err);
                         }
                     </script>
+                    <input id="submitted" type="hidden" name="submitted" value="submitted" />
 
+                    <input class="btn btn-primary" type="submit" value="Submit">
                 </form>
+
             </div>
         </div>
 
@@ -126,7 +154,7 @@
     <script>
         // A $( document ).ready() block.
         $(document).ready(function () {
-            console.log("ready!");
+            console.log("test!");
 
         });
     </script>
