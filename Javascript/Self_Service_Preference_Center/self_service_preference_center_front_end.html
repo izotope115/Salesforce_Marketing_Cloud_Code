@@ -79,7 +79,7 @@ Set @subKey = "gabe.khofri@slalom.com"
                 <form action="%%=RequestParameter('PAGEURL')=%%" method="post">
                     <script runat="server">
                         Platform.Load("core", "1.1");
-                        var DE = "PC_Categories"
+                        //check if contact has alread been added to selections preference center. if not then create new record
                         var subKey = Variable.GetValue("@subKey");
                         var PC_Selections = DataExtension.Init("PC_Selections");
 
@@ -92,26 +92,28 @@ Set @subKey = "gabe.khofri@slalom.com"
 
                             }
 
+                            Variable.SetValue("newRecord", "new record was added sucessfully");
+
                         } catch (err) {
-                            Write("<br>error: " + Stringify(error));
+                            Variable.SetValue("newRecord", "new record failed" + err);
                         }
                         try {
+                            //build categories and descriptions html
+                            var PC_Categories = DataExtension.Init("PC_Categories");
+                            var PC_CategoriesRows = PC_Categories.Rows.Retrieve();
 
-                            var PC_Categories = DataExtension.Init(DE);
-                            var Rows = PC_Categories.Rows.Retrieve();
-
-                            if (Rows.length > 0) {
-                                for (var i in Rows) {
-                                    Write('<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="' + Rows[i]["id"] + '">');
-                                    Write('<label class="custom-control-label" for="' + Rows[i]["id"] + '">' + Rows[i]["category"] + '</label></div>');
-                                    Write('<div><p>' + Rows[i]["description"] + '</p></div>');
+                            if (PC_CategoriesRows.length > 0) {
+                                for (var i in PC_CategoriesRows) {
+                                    Write('<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="' + PC_CategoriesRows[i]["id"] + '">');
+                                    Write('<label class="custom-control-label" for="' + PC_CategoriesRows[i]["id"] + '">' + PC_CategoriesRows[i]["category"] + '</label></div>');
+                                    Write('<div><p>' + PC_CategoriesRows[i]["description"] + '</p></div>');
                                 }
                             }
 
-                            Variable.SetValue("rowMessage", "(+) New data was retrieved successfully.");
+                            Variable.SetValue("html", " retrieved selections html sucessfully");
 
                         } catch (err) {
-                            Variable.SetValue("rowMessage", "(-) No data was retrieved." + err);
+                            Variable.SetValue("html", "retrieved selections failed." + err);
                         }
                     </script>
                     <input id="submitted" type="hidden" name="submitted" value="submitted" />
@@ -134,7 +136,8 @@ Set @subKey = "gabe.khofri@slalom.com"
 
 
     <script runat="client">
-        console.log(`%%=v(@rowMessage)=%%`);
+        console.log(`%%=v(@html)=%%`);
+        console.log(`%%=v(@newRecord)=%%`);
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -151,7 +154,7 @@ Set @subKey = "gabe.khofri@slalom.com"
     <script>
         // A $( document ).ready() block.
         $(document).ready(function () {
-            console.log("test!");
+            console.log("5150");
 
         });
     </script>
