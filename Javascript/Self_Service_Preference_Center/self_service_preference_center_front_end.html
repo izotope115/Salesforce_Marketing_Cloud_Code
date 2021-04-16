@@ -75,7 +75,7 @@ Set @subKey = "gabe.khofri@slalom.com"
         <div class="container">
 
             <div class="row">
-                <div style="margin:20px"><h4>Email Address:</h4> %%=v(@subKey)=%%</div>
+                <h4>Email Address: </h4> <p style="padding-left:20px">%%=v(@subKey)=%%</p>
                 <form action="%%=RequestParameter('PAGEURL')=%%" method="post">
 
                     <script runat="server">
@@ -184,7 +184,6 @@ Set @subKey = "gabe.khofri@slalom.com"
             status: `%%=v(@status)=%%`
         }
 
-        console.log('ssjs: ', pcSelections)
         console.log(`%%=v(@html)=%%`);
         console.log(`%%=v(@newRecord)=%%`);
     </script>
