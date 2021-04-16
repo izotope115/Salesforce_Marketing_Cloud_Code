@@ -66,9 +66,8 @@ Set @subKey = "gabe.khofri@slalom.com"
         <div class="jumbotron">
             <div class="container">
                 <h1 class="display-3">Self Service Preference Center</h1>
-                <p>Example of a Marketing Cloud Custom Self Service Preference Center pulling preference categories and
-                    descriptions from a data extension. This enables users to administer new or existing categories and
-                    descriptions without making any changes to HTML or CSS code.</p>
+                <p>Example of a Marketing Cloud Custom Preference Center pulling preference categories and
+                    descriptions from a data extension.</p>
                 <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
             </div>
         </div>
@@ -76,7 +75,9 @@ Set @subKey = "gabe.khofri@slalom.com"
         <div class="container">
 
             <div class="row">
+                <div style="margin:20px"><h4>Email Address:</h4> %%=v(@subKey)=%%</div>
                 <form action="%%=RequestParameter('PAGEURL')=%%" method="post">
+
                     <script runat="server">
                         Platform.Load("core", "1.1");
                         //check if contact has alread been added to selections preference center. if not then create new record
@@ -101,14 +102,38 @@ Set @subKey = "gabe.khofri@slalom.com"
                             //build categories and descriptions html
                             var PC_Categories = DataExtension.Init("PC_Categories");
                             var PC_CategoriesRows = PC_Categories.Rows.Retrieve();
+                            //get contact selections
+                            var PC_Selections = DataExtension.Init("PC_Selections");
+                            var filter = { Property: "subKey", SimpleOperator: "equals", Value: subKey };
+                            var PC_SelectionsData = PC_Selections.Rows.Retrieve(filter);
 
                             if (PC_CategoriesRows.length > 0) {
                                 for (var i in PC_CategoriesRows) {
+
                                     Write('<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="' + PC_CategoriesRows[i]["id"] + '">');
                                     Write('<label class="custom-control-label" for="' + PC_CategoriesRows[i]["id"] + '">' + PC_CategoriesRows[i]["category"] + '</label></div>');
                                     Write('<div><p>' + PC_CategoriesRows[i]["description"] + '</p></div>');
+
+                                    if (PC_SelectionsData.length > 0) {
+                                        for (var j in PC_SelectionsData) {
+                                            var sales = PC_SelectionsData[j]["Sales"];
+                                            var events = PC_SelectionsData[j]["Events"];
+                                            var CommunityOutReach = PC_SelectionsData[j]["CommunityOutReach"];
+                                            var NewProducts = PC_SelectionsData[j]["NewProducts"];
+                                            var status = PC_SelectionsData[j]["status"];
+
+                                        }
+                                    }
+
                                 }
                             }
+
+                            Variable.SetValue("sales", sales);
+                            Variable.SetValue("events", events);
+                            Variable.SetValue("CommunityOutReach", CommunityOutReach);
+                            Variable.SetValue("NewProducts", NewProducts);
+                            Variable.SetValue("subKey", subKey);
+                            Variable.SetValue("status", status);
 
                             Variable.SetValue("html", " retrieved selections html sucessfully");
 
@@ -116,6 +141,9 @@ Set @subKey = "gabe.khofri@slalom.com"
                             Variable.SetValue("html", "retrieved selections failed." + err);
                         }
                     </script>
+                    <!-- <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="" name="">
+                        <label class="custom-control-label" for=""></label></div>
+                        <div><p></p></div> -->
                     <input id="submitted" type="hidden" name="submitted" value="submitted" />
 
                     <input class="btn btn-primary" type="submit" value="Submit">
@@ -134,12 +162,6 @@ Set @subKey = "gabe.khofri@slalom.com"
         <p>&copy; Company 2021</p>
     </footer>
 
-
-    <script runat="client">
-        console.log(`%%=v(@html)=%%`);
-        console.log(`%%=v(@newRecord)=%%`);
-    </script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
@@ -151,11 +173,55 @@ Set @subKey = "gabe.khofri@slalom.com"
         integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
         crossorigin="anonymous"></script>
 
+
+    <script runat="client">
+        var pcSelections = {
+            sales: `%%=v(@sales)=%%`,
+            events: `%%=v(@events)=%%`,
+            CommunityOutReach: `%%=v(@CommunityOutReach)=%%`,
+            NewProducts: `%%=v(@NewProducts)=%%`,
+            subKey: `%%=v(@subKey)=%%`,
+            status: `%%=v(@status)=%%`
+        }
+
+        console.log('ssjs: ', pcSelections)
+        console.log(`%%=v(@html)=%%`);
+        console.log(`%%=v(@newRecord)=%%`);
+    </script>
+
+
     <script>
         // A $( document ).ready() block.
         $(document).ready(function () {
             console.log("5150");
+            console.log('jquery: ', pcSelections)
+            // $(".custom-control-input").attr("id", pcSelections.categoryID);
+            // $(".custom-control-input").attr("for", pcSelections.categoryID);
 
+            if (pcSelections.sales == "True") {
+                $("#Sales").prop('checked', true);
+            }
+            if (pcSelections.sales == "false") {
+                $("#Sales").prop('checked', false);
+            }
+            if (pcSelections.events == "True") {
+                $("#Events").prop('checked', true);
+            }
+            if (pcSelections.events == "false") {
+                $("#Events").prop('checked', false);
+            }
+            if (pcSelections.CommunityOutReach == "True") {
+                $("#CommunityOutReach").prop('checked', true);
+            }
+            if (pcSelections.CommunityOutReach == "false") {
+                $("#CommunityOutReach").prop('checked', false);
+            }
+            if (pcSelections.NewProducts == "True") {
+                $("#NewProducts").prop('checked', true);
+            }
+            if (pcSelections.NewProducts == "false") {
+                $("#NewProducts").prop('checked', false);
+            }
         });
     </script>
 </body>
