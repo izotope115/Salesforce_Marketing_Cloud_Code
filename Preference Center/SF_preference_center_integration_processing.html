@@ -162,14 +162,16 @@ SET @sid = SubscriberID
 
 /*set @subscriberStatus = Lookup("ent._Subscribers", "status", "SubscriberKey", @subKey)*/  
 ]%%
-%%[if @HasOptedOutOfEmail == "true" THEN]%%
-<br><div class="alert alert-success" role="alert">You have been unsubscribed from all publications.</div>
-%%[else]%%
-%%=IIF(RequestParameter("submitted") == "true", '<br><div class="alert alert-success" role="alert">Your subscriber preferences have been saved.</div>','')=%%
-%%=IIF(RequestParameter("resubscribed") == "true", '<br><div class="alert alert-success" role="alert">You are resubscribed to all publications.</div>','')=%%
+    %%[if @HasOptedOutOfEmail == "true" THEN]%%
+    <div class="alert alert-success" role="alert">You have been unsubscribed from all publications.</div>
+    %%[else]%%
+        %%=IIF(RequestParameter("submitted") == "true", '<div class="alert alert-success" role="alert">Your subscriber preferences have been    saved.</div>','')=%%
+        %%[else]%%
+        %%[endif]%%
+            %%=IIF(RequestParameter("resubscribe") == "true", '<div class="alert alert-success" role="alert" id="resubscribedAlert">You are     resubscribed to all publications.</div>','')=%%
+            %%[else]%%
+            %%[endif]%%
 
-
-%%[endif]%%
 <p><b>Email Address:</b> %%=v(@email)=%% </p>
 
    <p> <b>Subscription Status:</b> %%[if @HasOptedOutOfEmail == "false" then]%% <span style="color: green;">Subscribed</span></p>
