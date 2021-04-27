@@ -1,0 +1,228 @@
+%%[
+set @subKey = _subscriberkey
+set @email = emailaddr
+
+/*update SF with form data*/
+    if (RequestParameter("submitted") == "true") AND @subKey != "" then
+        set @Email_MarketingForm = RequestParameter("Email_MarketingForm")
+
+        if empty(@Email_MarketingForm) then
+            set @Email_MarketingForm = "false"
+        endif
+
+        set @Email_ClosuresForm = RequestParameter("Email_ClosuresForm")
+
+        if empty(@Email_ClosuresForm) then
+            set @Email_ClosuresForm = "false"
+        endif
+
+        set @Email_Order_RemindersForm = RequestParameter("Email_Order_RemindersForm")
+
+        if empty(@Email_Order_RemindersForm) then
+            set @Email_Order_RemindersForm = "false"
+        endif
+
+        set @Email_Company_UpdatesForm = RequestParameter("Email_Company_UpdatesForm")
+
+        if empty(@Email_Company_UpdatesForm) then
+            set @Email_Company_UpdatesForm = "false"
+        endif
+
+        set @Email_Delivery_NotificationsForm = RequestParameter("Email_Delivery_NotificationsForm")
+
+        if empty(@Email_Delivery_NotificationsForm) then
+            set @Email_Delivery_NotificationsForm = "false"
+        endif
+
+        set @HasOptedOutOfEmailForm = RequestParameter("HasOptedOutOfEmailForm")
+
+        if empty(@HasOptedOutOfEmailForm) then
+            set @HasOptedOutOfEmailForm = "false"
+        endif
+
+        /*if optd out then set selections to false*/
+        if @HasOptedOutOfEmailForm == "true" then
+
+            set @Email_MarketingForm = "false"
+            set @Email_ClosuresForm = "false"
+            set @Email_Order_RemindersForm = "false"
+            set @Email_Company_UpdatesForm = "false"
+            set @Email_Delivery_NotificationsForm = "false"
+        endif
+
+        /*if optd back in then set selections to true*/
+        if (@HasOptedOutOfEmailForm == "false") AND @Email_MarketingForm == "false" AND @Email_ClosuresForm == "false" AND @Email_ClosuresForm == "false" AND @Email_Order_RemindersForm == "false" AND @Email_Company_UpdatesForm == "false" AND @Email_Delivery_NotificationsForm == "false" then
+
+            set @HasOptedOutOfEmailForm = "true"
+        endif
+
+        /*update SF contact object and attributes*/
+        UpdateSingleSalesforceObject("Contact", @subKey, "Email_Marketing__c", @Email_MarketingForm,
+        "Email_Closures__c", @Email_ClosuresForm, "Email_Order_Reminders__c", @Email_Order_RemindersForm,
+        "Email_Company_Updates__c", @Email_Company_UpdatesForm, "Email_Delivery_Notifications__c", @Email_Delivery_NotificationsForm, "HasOptedOutOfEmail", @HasOptedOutOfEmailForm)
+        else
+    endif
+
+    /*get SF contact object, attributes and populate selections */
+    set @subscriberRows = RetrieveSalesforceObjects("Contact", "Email_Marketing__c, Email_Closures__c, Email_Order_Reminders__c, Email_Company_Updates__c, Email_Delivery_Notifications__c, HasOptedOutOfEmail", "Id", "=", @subKey)
+
+    if RowCount(@subscriberRows) == 1 then /* there should only be one row */
+
+        set @subscriberRow = Row(@subscriberRows, 1)
+        set @Email_Marketing = Field(@subscriberRow, "Email_Marketing__c")
+        set @Email_Closures = Field(@subscriberRow, "Email_Closures__c")
+        set @Email_Order_Reminders = Field(@subscriberRow, "Email_Order_Reminders__c")
+        set @Email_Company_Updates = Field(@subscriberRow, "Email_Company_Updates__c")
+        set @Email_Delivery_Notifications = Field(@subscriberRow, "Email_Delivery_Notifications__c")
+        set @HasOptedOutOfEmail = Field(@subscriberRow, "HasOptedOutOfEmail")
+    endif
+
+    /*when user resubscribes*/
+    if (RequestParameter("resubscribe") == "true") AND @subKey != "" then
+
+    /*update SF contact object and attributes*/
+    UpdateSingleSalesforceObject("Contact", @subKey, "Email_Marketing__c", "true", "Email_Closures__c", "true",
+    "Email_Order_Reminders__c", "true", "Email_Company_Updates__c", "true", "Email_Delivery_Notifications__c", "true","HasOptedOutOfEmail", "false")
+
+    set @subscriberRows = RetrieveSalesforceObjects(
+    "Contact", "Email_Marketing__c, Email_Closures__c, Email_Order_Reminders__c, Email_Company_Updates__c, Email_Delivery_Notifications__c, HasOptedOutOfEmail",
+    "Id", "=", @subKey)
+
+    if RowCount(@subscriberRows) == 1 then /* there should only be one row */
+
+        set @subscriberRow = Row(@subscriberRows, 1)
+        set @Email_Marketing = Field(@subscriberRow, "Email_Marketing__c")
+        set @Email_Closures = Field(@subscriberRow, "Email_Closures__c")
+        set @Email_Order_Reminders = Field(@subscriberRow, "Email_Order_Reminders__c")
+        set @Email_Company_Updates = Field(@subscriberRow, "Email_Company_Updates__c")
+        set @Email_Delivery_Notifications = Field(@subscriberRow, "Email_Delivery_Notifications__c")
+        set @HasOptedOutOfEmail = Field(@subscriberRow, "HasOptedOutOfEmail")
+    endif
+
+    SET @Subscriber = CreateObject("Subscriber")
+    SetObjectProperty(@Subscriber, "SubscriberKey",@subKey)
+    SetObjectProperty(@Subscriber, "Status", "Active" )
+    
+    SET @Status = InvokeUpdate(@Subscriber, @createErrDesc, @createErrNo, @createOpts)
+    else
+    endif
+
+    /*sets subscription status to active when set at SF*/
+    if @HasOptedOutOfEmail == "false" then
+        SET @Subscriber = CreateObject("Subscriber")
+        SetObjectProperty(@Subscriber, "SubscriberKey",@subKey)
+        SetObjectProperty(@Subscriber, "Status", "Active" )
+    
+        SET @Status = InvokeUpdate(@Subscriber, @createErrDesc, @createErrNo, @createOpts)
+    endif
+
+/*unsubscribe*/
+if @HasOptedOutOfEmail == "true" then
+SET @sid = SubscriberID
+    SET @jid = JobID
+    SET @listid = ListID
+    SET @batchid = _JobSubscriberBatchID
+    SET @reason = "Preference Center Unsubscribe"
+
+    SET @lue = CreateObject("ExecuteRequest")
+    SetObjectProperty(@lue,"Name","LogUnsubEvent")
+
+    SET @lue_prop = CreateObject("APIProperty")                 
+    SetObjectProperty(@lue_prop, "Name", "SubscriberID")
+    SetObjectProperty(@lue_prop, "Value", @sid)
+    AddObjectArrayItem(@lue, "Parameters", @lue_prop)
+
+    SET @lue_prop = CreateObject("APIProperty")
+    SetObjectProperty(@lue_prop, "Name", "JobID")
+    SetObjectProperty(@lue_prop, "Value", @jid)
+    AddObjectArrayItem(@lue, "Parameters", @lue_prop)
+
+    SET @lue_prop = CreateObject("APIProperty")
+    SetObjectProperty(@lue_prop, "Name", "ListID")
+    SetObjectProperty(@lue_prop, "Value", @listid)
+    AddObjectArrayItem(@lue, "Parameters", @lue_prop)
+
+    SET @lue_prop = CreateObject("APIProperty")
+    SetObjectProperty(@lue_prop, "Name", "BatchID")
+    SetObjectProperty(@lue_prop, "Value", @batchid)
+    AddObjectArrayItem(@lue, "Parameters", @lue_prop)
+
+    SET @lue_prop = CreateObject("APIProperty")
+    SetObjectProperty(@lue_prop, "Name", "Reason")
+    SetObjectProperty(@lue_prop, "Value", @reason)
+    AddObjectArrayItem(@lue, "Parameters", @lue_prop)
+
+    SET @lue_statusCode = InvokeExecute(@lue, @overallStatus, @requestId)
+
+    SET @lue_Response = Row(@lue_statusCode, 1)
+    SET @lue_Status = Field(@lue_Response,"StatusMessage")
+    SET @lue_Error = Field(@lue_Response,"ErrorCode")
+    else
+    endif
+
+/*set @subscriberStatus = Lookup("ent._Subscribers", "status", "SubscriberKey", @subKey)*/  
+]%%
+%%[if @HasOptedOutOfEmail == "true" THEN]%%
+<br><div class="alert alert-success" role="alert">You have been unsubscribed from all publications.</div>
+%%[else]%%
+%%=IIF(RequestParameter("submitted") == "true", '<br><div class="alert alert-success" role="alert">Your subscriber preferences have been saved.</div>','')=%%
+%%=IIF(RequestParameter("resubscribed") == "true", '<br><div class="alert alert-success" role="alert">You are resubscribed to all publications.</div>','')=%%
+
+
+%%[endif]%%
+<p><b>Email Address:</b> %%=v(@email)=%% </p>
+
+   <p> <b>Subscription Status:</b> %%[if @HasOptedOutOfEmail == "false" then]%% <span style="color: green;">Subscribed</span></p>
+    %%[else]%%
+    <span style="color: red;">Unsubscribed</span></p>
+%%[endif]%%
+<form action="%%=RequestParameter('PAGEURL')=%%" method="post">
+
+    <div class="custom-control custom-switch custom-switch-md">
+        <input class="custom-control-input checkbox" id="Email_Marketing" type="checkbox" name="Email_MarketingForm"
+            value="%%=v(@Email_Marketing)=%%">
+        <label class="custom-control-label" for="Email_Marketing">Marketing</label>
+    </div>
+
+    <div class="custom-control custom-switch custom-switch-md">
+        <input class="custom-control-input checkbox" id="Email_Closures" type="checkbox" name="Email_ClosuresForm"
+            value="%%=v(@Email_Closures)=%%">
+        <label class="custom-control-label" for="Email_Closures">Closure</label>
+    </div>
+
+    <div class="custom-control custom-switch custom-switch-md">
+        <input class="custom-control-input checkbox" id="Email_Order_Reminders" type="checkbox"
+            name="Email_Order_RemindersForm" value="%%=v(@Email_Order_Reminders)=%%">
+        <label class="custom-control-label" for="Email_Order_Reminders">Order Reminders</label>
+    </div>
+
+    <div class="custom-control custom-switch custom-switch-md">
+        <input class="custom-control-input checkbox" id="Email_Company_Updates" type="checkbox"
+            name="Email_Company_UpdatesForm" value="%%=v(@Email_Company_Updates)=%%">
+        <label class="custom-control-label" for="Email_Company_Updates">Company Updates</label>
+    </div>
+
+    <div class="custom-control custom-switch custom-switch-md">
+        <input class="custom-control-input checkbox" id="Email_Delivery_Notifications" type="checkbox"
+            name="Email_Delivery_NotificationsForm" value="%%=v(@Email_Delivery_Notifications)=%%">
+        <label class="custom-control-label" for="Email_Delivery_Notifications">Delivery Notifications</label>
+    </div>
+    %%[if @HasOptedOutOfEmail == "true" THEN]%%
+    %%[else]%%
+    <div class="custom-control custom-switch custom-switch-md">
+        <input class="custom-control-input checkbox" id="HasOptedOutOfEmail" type="checkbox"
+            name="HasOptedOutOfEmailForm" value="%%=v(@HasOptedOutOfEmail)=%%">
+        <label id="colorChange" class="custom-control-label" for="HasOptedOutOfEmail">Unsubscribe</label>
+    </div>
+    %%[endif]%%
+
+    %%[if @HasOptedOutOfEmail == "true" THEN]%%
+        <input id="resubscribe" type="hidden" name="resubscribe" value="true" />
+    <input class="btn btn-primary" type="submit" value="Resubscribe" id="resubscribe">
+    %%[else]%%
+    <input id="submitted" type="hidden" name="submitted" value="true" />
+    <input class="btn btn-primary" type="submit" value="Submit" id="submit">
+    %%[endif]%%
+
+</form>
+
