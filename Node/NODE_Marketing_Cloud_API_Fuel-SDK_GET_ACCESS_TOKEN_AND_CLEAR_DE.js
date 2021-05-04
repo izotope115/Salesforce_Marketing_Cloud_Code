@@ -40,7 +40,7 @@ var clearData = setInterval(function () {
 
             var config = {
                 method: 'post',
-                url: 'https://mcbf8s0h5zzztdqn8-zf3kc5pvb4.soap.marketingcloudapis.com/Service.asmx',
+                url: 'https://{{SOAP}}.soap.marketingcloudapis.com/Service.asmx',
                 headers: {
                     'Content-Type': 'text/xml' //use text/xml when grabbing code from postman
                 },
@@ -56,7 +56,7 @@ var clearData = setInterval(function () {
 
             var config = {
                 method: 'post',
-                url: 'https://mcbf8s0h5zzztdqn8-zf3kc5pvb4.soap.marketingcloudapis.com/Service.asmx',
+                url: 'https://{{SOAP}}.soap.marketingcloudapis.com/Service.asmx',
                 headers: {
                     'Content-Type': 'text/xml' //use text/xml when grabbing code from postman
                 },
