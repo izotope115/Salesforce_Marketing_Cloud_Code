@@ -1,0 +1,49 @@
+<script runat="server">
+Platform.Load("core","1.1.5"); 
+
+//Making use of Web-socket Proxy
+var prox = new Script.Util.WSProxy();
+var options = {SaveOptions: [{'PropertyName': '*', SaveAction: 'UpdateAdd'}]};
+
+//Similar to RequestParameter in AMPscript to get values from Form submitted
+var sub_key = Platform.Request.GetFormField('subkey')
+var email = Platform.Request.GetFormField('email')
+
+function unsub() {
+prox.setClientId({ "ID": "10966194" }); //Setting MID
+var props = { 
+                SubscriberKey: sub_key,
+                EmailAddress: email,
+                Lists: [{ID: '1753',    //Setting your LIST_ID
+                        Status: 'Unsubscribed' // to unsub = "Unsubscribed" to subscribe = "Active"
+                        }]
+            };
+var data = prox.updateItem("Subscriber", props, options);
+
+return data.Results[0].StatusCode;
+}
+
+unsub(); //Run the above custom function
+</script>
+
+
+Received value subkey = <ctrl:var name=sub_key /> <br/><br/>
+Hi User, your email address <ctrl:var name=email /> has been unsubscribed.
+
+<!--update status--> 
+<script runat="server">
+        Platform.Load("core","1.1.5");
+        var prox = new Script.Util.WSProxy();
+        var options = {SaveOptions: [{'PropertyName': '*', SaveAction: 'UpdateAdd'}]};
+    
+        var props = { 
+            SubscriberKey: 'test@email.com',
+            EmailAddress: 'test@email.com',
+            Lists: [{
+                ID: 12345,
+                Status: 'Active'
+            }]
+        };
+        var data = prox.updateItem('Subscriber', props, options);
+        Write(data.Results[0].StatusCode);
+    </script>
