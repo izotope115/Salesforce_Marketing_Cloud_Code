@@ -1,0 +1,11 @@
+%%[ /* lookup the base subscriber key for this mobile contact directly from the synchronized DE */ 
+var @subscriberKey, @result 
+set @subscriberKey = Lookup('Contact_Salesforce', 'Id', 'MobilePhone', MOBILE_NUMBER) 
+
+/* update the contact mobile opt-out field in Sales Cloud */ 
+set @result = UpdateSingleSalesforceObject('Contact', @subscriberKey, 'et4ae5__HasOptedOutOfMobile__c', 'true') 
+
+IF @result == 0 THEN ]%% There was an error processing your request. Please try again.
+%%[ ELSE ]%% 
+You have now been unsubscribed from all SMS messages.
+%%[ ENDIF ]%%
